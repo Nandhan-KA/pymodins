@@ -78,7 +78,7 @@ deep_learning_modules = [
     'torch', 'pytorch-lightning', 'transformers', 'fastai', 'keras-rl', 'tensorboard',
 ]
 
-full_stack_modules = [
+full_stack_development_modules = [
     'flask', 'django', 'fastapi', 'express', 'sqlalchemy', 'django-orm', 'mongodb', 'mongoose', 'react', 'vue', 'angular', 'jquery', 'bootstrap', 'tailwindcss', 'swagger', 'postman', 'git', 'github-cli', 'docker', 'docker-compose', 'kubernetes', 'nginx', 'apache', 'oauthlib', 'python-social-auth', 'passport', 'pytest', 'jest', 'ansible', 'jenkins', 'travis-ci', 'prometheus', 'grafana', 'elk-stack', 'redis', 'celery', 'graphql', 'socket.io',
 ]
 
