@@ -2,14 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name="pymodins",
-    version="0.1.0",
+    version="0.1.6",
     packages=find_packages(),
     install_requires=[
         "rich"
     ],
     entry_points={
         "console_scripts": [
-            "pymodins=pymodins.installer:main",
+            "pymodins=pymodins.installer:run",
         ],
     },
     author="Nandhan K",
@@ -25,4 +25,3 @@ setup(
     ],
     python_requires='>=3.6',
 )
-

@@ -1,0 +1,12 @@
+LICENSE
+README.md
+setup.py
+pymodins/__init__.py
+pymodins/installer.py
+pymodins.egg-info/PKG-INFO
+pymodins.egg-info/SOURCES.txt
+pymodins.egg-info/dependency_links.txt
+pymodins.egg-info/entry_points.txt
+pymodins.egg-info/requires.txt
+pymodins.egg-info/top_level.txt
+test/test-installer.py

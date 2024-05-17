@@ -1,0 +1,2 @@
+[console_scripts]
+pymodins = pymodins.installer:run
