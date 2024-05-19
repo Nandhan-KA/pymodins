@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pymodins",
-    version="0.1.6",
+    version="0.1.7",
     packages=find_packages(),
     install_requires=[
         "rich"
@@ -15,6 +15,7 @@ setup(
     author="Nandhan K",
     author_email="nandhan2003alamelu@gmail.com ",
     description="A module to install various Python packages.",
+    keywords="Python Module Installer, Python Package Installer, python modules installer, python package installer",
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url="https://github.com/Nandhan-KA/pymodins",

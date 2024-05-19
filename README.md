@@ -1,6 +1,6 @@
 # PYMODINS
 
-pymodins is a Python Modules Installer for Developers and Peoples who are new to python.
+[pymodins](https://github.com/Nandhan-KA/pymodins) is a Python Modules Installer for Developers and Peoples who are new to python.
 
 ## Installation
 
@@ -15,8 +15,38 @@ pip install pymodins
 ```python
 import pymodins
 
-# runs
+# Displays all Domains
 pymodins.run()
+
+# Install Basic Modules
+pymodins.install_basic_modules()
+
+#install Advanced Modules
+pymodins.install_advanced_modules()
+
+#install Science Modules
+pymodins.install_science_modules()
+
+#install Computer Vision Modules
+pymodins.install_computervision_modules()
+
+#install MachineLearning Modules()
+pymodins.install_machinelearning_modules()
+
+#install Deep Learning Modules
+pymodins.install_deeplearning_modules()
+
+#install Full Stack Development Modules
+pymodins.install_fullstack_modules()
+
+#install Network Modules
+pymodins.install_network_modules()
+
+#install Build Modules
+pymodins.install_build_modules()
+
+#install Jupyter Modules
+pymodins.install_jupyter_modules()
 
 ```
 
@@ -79,6 +109,5 @@ Github: @github.com/Nandhan-KA
 Enter the number corresponding to the module type:
 ```
 
-# CONCLUSION
-### Thank you for using this Program
-### Feel free to ask your queries
+# 🎉 Thank you for using this project!
+# Feel free to ask your queries 😊
