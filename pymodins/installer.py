@@ -1,23 +1,22 @@
 import os
 import getpass
 import sys
-import ctypes
-import subprocess
-import webbrowser
-import pymsgbox
 import urllib.request
 from datetime import datetime
+import subprocess
+import ctypes
+import webbrowser
+import pymsgbox
 from rich.console import Console
 
 user = getpass.getuser()
-version="0.1.8"
+
 def internet(ping="https://google.com"):
     try:
         urllib.request.urlopen(ping)
         return True
     except:
         return False
-
 
 def os_platform():
     platform = {
@@ -26,7 +25,6 @@ def os_platform():
     if sys.platform not in platform:
         return sys.platform
     return platform[sys.platform]
-
 
 def banner():
     console = Console()
@@ -44,12 +42,9 @@ def banner():
 def sys_info():
     print("System Platform:", sys.platform)
     print("Python verion:", sys.version)
-    print("pymodins Version:",version )
-
 
 def clear():
     return os.system('cls')
-
 
 def log_mod(module_type, module_name, python_folder):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -139,16 +134,15 @@ def install_rust():
     print("Installation of Rust completed successfully.")
     return True
 
-
 # Module Lists
+
 basic_modules = [
     'numpy', 'pandas', 'matplotlib', 'scipy', 'requests', 'beautifulsoup4', 'seaborn', 'tqdm', 'docutils', 'pyyaml', 'python-dotenv', 'pillow',
+      'datetime',  'statistics', 'glob',  'configparser'
 ]
 
 advanced_modules = [
-    'argparse', 'asyncio', 'collections', 'contextlib', 'dataclasses', 'pytz', 'pathlib', 'typing_extensions',
-        'numpy', 'pandas', 'matplotlib', 'scipy', 'requests', 'beautifulsoup4', 'seaborn', 'tqdm', 'docutils', 'pyyaml', 'python-dotenv', 'pillow',
-
+    'argparse', 'asyncio', 'dataclasses', 'pytz', 'pathlib', 'typing_extensions', 'jsonschema', 'pydantic'
 ]
 
 science_modules = [
@@ -183,7 +177,7 @@ network_modules = [
 
 build_modules = [
     'pep517', 'setuptools', 'build', 'wheel', 'pytoml', 'cmake',
-    'pyproject.toml', 'ninja', 'meson', 'scons', 'bazel', 'autoconf', 'automake', 'libtool','rust'
+    'pyproject.toml', 'ninja', 'meson', 'scons', 'bazel', 'autoconf', 'automake', 'libtool', 'rust'
 ]
 
 jupyter_modules = [
@@ -191,51 +185,29 @@ jupyter_modules = [
     'notebook', 'jupyterlab', 'nbconvert', 'nbformat', 'ipywidgets', 'ipykernel', 'voila', 'jupyter_contrib_nbextensions', 'jupyter_dash', 'jupyter_bokeh', 'jupytext', 'jupyterhub', 'jupyter_client', 'qtconsole'
 ]
 
-
 def installer():
     if internet():
         clear()
+        banner()
+        sys_info()
+
+        module_types = [
+            'Basic Modules', 'Advanced Modules', 'Science Modules', 'Computer Vision Modules',
+            'Machine Learning Modules', 'Deep Learning Modules', 'Full Stack Development Modules',
+            'Network Modules', 'Build Modules', 'Jupyter Modules'
+        ]
+
+        print("\nPlease select the type of modules you want to install:\n")
+        for i, module_type in enumerate(module_types, 1):
+            print(f"{i}. {module_type}")
+
         try:
-            if os_platform() == "Windows":
-                pass
-            else:
-                print("This software is only for Windows. Exiting.")
-                sys.exit()
-            banner()
+            selected_module_type = int(
+                input("\nEnter the number corresponding to your choice: "))
 
-            print("""
-            1. Basic Modules
-            2. Advanced Modules
-            3. Science Modules
-            4. Computer Vision Modules
-            5. Machine Learning Modules
-            6. Deep Learning Modules
-            7. Full Stack Development Modules
-            8. Network Modules
-            9. Build Modules
-            10.Jupyter Modules
-            """)
-
-            selected_option = int(
-                input("Enter the number corresponding to the module type: "))
-            clear()
-            module_types = [
-                None,
-                'Basic Modules',
-                'Advanced Modules',
-                'Science Modules',
-                'Computer Vision Modules',
-                'Machine Learning Modules',
-                'Deep Learning Modules',
-                'Full Stack Development Modules',
-                'Network Modules',
-                'Build Modules',
-                'Jupyter Modules'
-            ]
-
-            selected_module_type = module_types[selected_option]
-
-            if selected_module_type:
+            if 1 <= selected_module_type <= len(module_types):
+                clear()
+                selected_module_type = module_types[selected_module_type - 1]
                 print(f"\nSelected Module Type: {selected_module_type}")
                 print("Modules:")
                 modules = globals()[
@@ -282,7 +254,8 @@ def installer():
                                 else:
                                     print("Failed to install Rust. Opening the Rust installation webpage.")
                                     webbrowser.open('https://www.rust-lang.org/tools/install')
-                                    break
+                                    break  
+
                         clear()
                         command = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {module}"
                         os.system(command)
@@ -296,6 +269,12 @@ def installer():
                     elif more.lower() in ["yes", "y"]:
                         installer()
                 else:
+                    print("Modules:")
+                    modules = globals()[
+                        selected_module_type.lower().replace(" ", "_")]
+                    for i, module in enumerate(modules, 1):
+                        print(f"{i}. {module}")
+
                     module_index = int(input(
                         "Enter the number corresponding to the module to install (type '0' to exit): "))
 
@@ -317,6 +296,28 @@ def installer():
                             input("Select your Python folder (1 or 2): ")) - 1]
                     else:
                         python_folder = str(*versions)
+                    
+                    if selected_module == 'dlib':
+                        print("Module dlib has to be installed after you have installed visual studio build tools")
+                        x = input("Do you want to install VS Build Tools? (y/n): ").lower()
+                        if x == "y":
+                            if install_vscode_build_tools():
+                                print("Build tools installed successfully.")
+                            else:
+                                print("Failed to install build tools.")
+                                sys.exit()  
+                    
+                    if selected_module == 'rust':
+                        print("Module rust needs to be installed separately.")
+                        x = input("Do you want to install Rust? (y/n): ").lower()
+                        if x == "y":
+                            if install_rust():
+                                print("Rust installed successfully.")
+                            else:
+                                print("Failed to install Rust. Opening the Rust installation webpage.")
+                                webbrowser.open('https://www.rust-lang.org/tools/install')
+                                sys.exit()  
+
                     command = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {selected_module}"
                     os.system(command)
 
@@ -337,10 +338,9 @@ def installer():
         print("No Internet Connection")
 
 
-
 def run():
     installer()
-    
+
 def install_basic_modules():
     selected_option = 1
     clear()
@@ -399,6 +399,12 @@ def install_basic_modules():
             elif more.lower() in ["yes", "y"]:
                 installer()
         else:
+            print("Modules:")
+            modules = globals()[
+            selected_module_type.lower().replace(" ", "_")]
+            for i, module in enumerate(modules, 1):
+                print(f"{i}. {module}")
+
             module_index = int(input(
                 "Enter the number corresponding to the module to install (type '0' to exit): "))
 
@@ -489,6 +495,12 @@ def install_advanced_modules():
             elif more.lower() in ["yes", "y"]:
                 installer()
         else:
+            print("Modules:")
+            modules = globals()[
+            selected_module_type.lower().replace(" ", "_")]
+            for i, module in enumerate(modules, 1):
+                print(f"{i}. {module}")
+                
             module_index = int(input(
                 "Enter the number corresponding to the module to install (type '0' to exit): "))
 
@@ -579,6 +591,11 @@ def install_machinelearning_modules():
             elif more.lower() in ["yes", "y"]:
                 installer()
         else:
+            print("Modules:")
+            modules = globals()[
+            selected_module_type.lower().replace(" ", "_")]
+            for i, module in enumerate(modules, 1):
+                print(f"{i}. {module}")
             module_index = int(input(
                 "Enter the number corresponding to the module to install (type '0' to exit): "))
 
@@ -669,6 +686,11 @@ def install_deeplearning_modules():
             elif more.lower() in ["yes", "y"]:
                 installer()
         else:
+            print("Modules:")
+            modules = globals()[
+            selected_module_type.lower().replace(" ", "_")]
+            for i, module in enumerate(modules, 1):
+                print(f"{i}. {module}")
             module_index = int(input(
                 "Enter the number corresponding to the module to install (type '0' to exit): "))
 
@@ -759,6 +781,11 @@ def install_fullstack_modules():
             elif more.lower() in ["yes", "y"]:
                 installer()
         else:
+            print("Modules:")
+            modules = globals()[
+            selected_module_type.lower().replace(" ", "_")]
+            for i, module in enumerate(modules, 1):
+                print(f"{i}. {module}")
             module_index = int(input(
                 "Enter the number corresponding to the module to install (type '0' to exit): "))
 
@@ -849,6 +876,11 @@ def install_science_modules():
             elif more.lower() in ["yes", "y"]:
                 installer()
         else:
+            print("Modules:")
+            modules = globals()[
+            selected_module_type.lower().replace(" ", "_")]
+            for i, module in enumerate(modules, 1):
+                print(f"{i}. {module}")
             module_index = int(input(
                 "Enter the number corresponding to the module to install (type '0' to exit): "))
 
@@ -949,6 +981,11 @@ def install_computervision_modules():
             elif more.lower() in ["yes", "y"]:
                 installer()
         else:
+            print("Modules:")
+            modules = globals()[
+            selected_module_type.lower().replace(" ", "_")]
+            for i, module in enumerate(modules, 1):
+                print(f"{i}. {module}")
             module_index = int(input(
                 "Enter the number corresponding to the module to install (type '0' to exit): "))
 
@@ -970,6 +1007,18 @@ def install_computervision_modules():
                     input("Select your Python folder (1 or 2): ")) - 1]
             else:
                 python_folder = str(*versions)
+                
+            if selected_module == 'dlib':
+                pymsgbox.alert("This Modules Required VSBuild Tools")
+                print("Module dlib has to be installed after you have installed visual studio build tools")
+                x = input("Do you want to install VS Build Tools? (y/n): ").lower()
+                if x == "y":
+                    if install_vscode_build_tools():
+                        print("Build tools installed successfully.")
+                    else:
+                        print("Failed to install build tools.")
+                            
+                
             command = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {selected_module}"
             os.system(command)
 
@@ -1038,6 +1087,11 @@ def install_network_modules():
             elif more.lower() in ["yes", "y"]:
                 installer()
         else:
+            print("Modules:")
+            modules = globals()[
+            selected_module_type.lower().replace(" ", "_")]
+            for i, module in enumerate(modules, 1):
+                print(f"{i}. {module}")
             module_index = int(input(
                 "Enter the number corresponding to the module to install (type '0' to exit): "))
 
@@ -1141,6 +1195,11 @@ def install_build_modules():
             elif more.lower() in ["yes", "y"]:
                 installer()
         else:
+            print("Modules:")
+            modules = globals()[
+            selected_module_type.lower().replace(" ", "_")]
+            for i, module in enumerate(modules, 1):
+                print(f"{i}. {module}")
             module_index = int(input(
                 "Enter the number corresponding to the module to install (type '0' to exit): "))
 
@@ -1162,6 +1221,18 @@ def install_build_modules():
                     input("Select your Python folder (1 or 2): ")) - 1]
             else:
                 python_folder = str(*versions)
+                
+            if selected_module == 'rust':
+                pymsgbox.alert("This Modules Required VSBuild Tools")
+                print("Module rust needs to be installed separately.")
+                x = input("Do you want to install Rust? (y/n): ").lower()
+                if x == "y":
+                    if install_rust():
+                        print("Rust installed successfully.")
+                    else:
+                        print("Failed to install Rust. Opening the Rust installation webpage.")
+                        webbrowser.open('https://www.rust-lang.org/tools/install')
+                        
             command = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {selected_module}"
             os.system(command)
 
@@ -1231,6 +1302,11 @@ def install_jupyter_modules():
             elif more.lower() in ["yes", "y"]:
                 installer()
         else:
+            print("Modules:")
+            modules = globals()[
+            selected_module_type.lower().replace(" ", "_")]
+            for i, module in enumerate(modules, 1):
+                print(f"{i}. {module}")
             module_index = int(input(
                 "Enter the number corresponding to the module to install (type '0' to exit): "))
 
