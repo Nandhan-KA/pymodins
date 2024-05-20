@@ -16,7 +16,7 @@ Requires-Dist: rich
 
 # PYMODINS
 
-pymodins is a Python Modules Installer for Developers and Peoples who are new to python.
+[pymodins](https://github.com/Nandhan-KA/pymodins) is a Python Modules Installer for Developers and Peoples who are new to python.
 
 ## Installation
 
@@ -125,6 +125,5 @@ Github: @github.com/Nandhan-KA
 Enter the number corresponding to the module type:
 ```
 
-# CONCLUSION
-### Thank you for using this Program
-### Feel free to ask your queries
+# ðŸŽ‰ Thank you for using this project!
+# Feel free to ask your queries ðŸ˜Š

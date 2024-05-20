@@ -2,10 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="pymodins",
-    version="0.1.7",
+    version="0.1.8",
     packages=find_packages(),
     install_requires=[
-        "rich"
+        "rich",
+        "pymsgbox"
     ],
     entry_points={
         "console_scripts": [

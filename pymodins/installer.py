@@ -1,12 +1,16 @@
 import os
 import getpass
 import sys
+import ctypes
+import subprocess
+import webbrowser
+import pymsgbox
 import urllib.request
 from datetime import datetime
 from rich.console import Console
 
 user = getpass.getuser()
-
+version="0.1.8"
 def internet(ping="https://google.com"):
     try:
         urllib.request.urlopen(ping)
@@ -40,6 +44,7 @@ def banner():
 def sys_info():
     print("System Platform:", sys.platform)
     print("Python verion:", sys.version)
+    print("pymodins Version:",version )
 
 
 def clear():
@@ -52,6 +57,88 @@ def log_mod(module_type, module_name, python_folder):
     with open("module_installation_log.txt", "a") as log_file:
         log_file.write(log_entry + "\n")
 
+def install_vscode_build_tools():
+    def run_command(command):
+        result = subprocess.run(command, shell=True)
+        return result.returncode
+
+    def install_chocolatey():
+        choco_install_cmd = (
+            '@"%"SystemRoot%"\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" '
+            '-NoProfile -InputFormat None -ExecutionPolicy Bypass -Command '
+            '"iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'))" '
+            '&& SET "PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin"'
+        )
+        return run_command(choco_install_cmd)
+
+    def install_vs_build_tools():
+        vs_build_tools_cmd = 'choco install -y visualstudio2019buildtools'
+        return run_command(vs_build_tools_cmd)
+
+    try:
+        is_admin = os.getuid() == 0
+    except AttributeError:
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+
+    if not is_admin:
+        print("This script requires administrator privileges. Please run as an administrator.")
+        return False
+
+    choco_installed = subprocess.run("choco -v", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if choco_installed.returncode != 0:
+        if install_chocolatey() != 0:
+            print("Failed to install Chocolatey.")
+            return False
+
+    if install_vs_build_tools() != 0:
+        print("Failed to install Visual Studio Build Tools.")
+        return False
+
+    print("Installation of Visual Studio Build Tools completed successfully.")
+    return True
+
+def install_rust():
+    def run_command(command):
+        result = subprocess.run(command, shell=True)
+        return result.returncode
+
+    def download_rust_installer():
+        url = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe"
+        installer_path = os.path.join(os.getenv('TEMP'), 'rustup-init.exe')
+        try:
+            urllib.request.urlretrieve(url, installer_path)
+            return installer_path
+        except Exception as e:
+            print(f"Failed to download Rust installer: {e}")
+            return None
+
+    def install_rustup(installer_path):
+        rustup_install_cmd = f'"{installer_path}" -y'
+        return run_command(rustup_install_cmd)
+
+    try:
+        is_admin = os.getuid() == 0
+    except AttributeError:
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+
+    if not is_admin:
+        print("This script requires administrator privileges. Please run as an administrator.")
+        return False
+
+    installer_path = download_rust_installer()
+    if not installer_path:
+        print("Failed to download Rust installer. Opening the Rust installation webpage.")
+        webbrowser.open('https://www.rust-lang.org/tools/install')
+        return False
+
+    if install_rustup(installer_path) != 0:
+        print("Failed to install Rust. Opening the Rust installation webpage.")
+        webbrowser.open('https://www.rust-lang.org/tools/install')
+        return False
+
+    print("Installation of Rust completed successfully.")
+    return True
+
 
 # Module Lists
 basic_modules = [
@@ -59,7 +146,9 @@ basic_modules = [
 ]
 
 advanced_modules = [
-    'functools', 'logging', 'argparse', 'asyncio', 'collections', 'contextlib', 'dataclasses', 'pytz', 'pathlib', 'typing_extensions',
+    'argparse', 'asyncio', 'collections', 'contextlib', 'dataclasses', 'pytz', 'pathlib', 'typing_extensions',
+        'numpy', 'pandas', 'matplotlib', 'scipy', 'requests', 'beautifulsoup4', 'seaborn', 'tqdm', 'docutils', 'pyyaml', 'python-dotenv', 'pillow',
+
 ]
 
 science_modules = [
@@ -94,7 +183,7 @@ network_modules = [
 
 build_modules = [
     'pep517', 'setuptools', 'build', 'wheel', 'pytoml', 'cmake',
-    'pyproject.toml', 'ninja', 'meson', 'scons', 'bazel', 'autoconf', 'automake', 'libtool'
+    'pyproject.toml', 'ninja', 'meson', 'scons', 'bazel', 'autoconf', 'automake', 'libtool','rust'
 ]
 
 jupyter_modules = [
@@ -172,6 +261,28 @@ def installer():
                         python_folder = str(*versions)
 
                     for module in modules:
+                        if module == 'dlib':
+                            pymsgbox.alert("This Modules Required VSBuild Tools")
+                            print("Module dlib has to be installed after you have installed visual studio build tools")
+                            x = input("Do you want to install VS Build Tools? (y/n): ").lower()
+                            if x == "y":
+                                if install_vscode_build_tools():
+                                    print("Build tools installed successfully.")
+                                else:
+                                    print("Failed to install build tools.")
+                                    continue  
+                        
+                        if module == 'rust':
+                            pymsgbox.alert("This Modules Required VSBuild Tools")
+                            print("Module rust needs to be installed separately.")
+                            x = input("Do you want to install Rust? (y/n): ").lower()
+                            if x == "y":
+                                if install_rust():
+                                    print("Rust installed successfully.")
+                                else:
+                                    print("Failed to install Rust. Opening the Rust installation webpage.")
+                                    webbrowser.open('https://www.rust-lang.org/tools/install')
+                                    break
                         clear()
                         command = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {module}"
                         os.system(command)
@@ -814,6 +925,17 @@ def install_computervision_modules():
                 python_folder = str(*versions)
 
             for module in modules:
+                if module == 'dlib':
+                    pymsgbox.alert("This Modules Required VSBuild Tools")
+                    print("Module dlib has to be installed after you have installed visual studio build tools")
+                    x = input("Do you want to install VS Build Tools? (y/n): ").lower()
+                    if x == "y":
+                        if install_vscode_build_tools():
+                            print("Build tools installed successfully.")
+                        else:
+                            print("Failed to install build tools.")
+                            continue  
+                        
                 clear()
                 command = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {module}"
                 os.system(command)
@@ -993,6 +1115,19 @@ def install_build_modules():
                 python_folder = str(*versions)
 
             for module in modules:
+                if module == 'rust':
+                    pymsgbox.alert("This Modules Required VSBuild Tools")
+                    print("Module rust needs to be installed separately.")
+                    x = input("Do you want to install Rust? (y/n): ").lower()
+                    if x == "y":
+                        if install_rust():
+                            print("Rust installed successfully.")
+                        else:
+                            print("Failed to install Rust. Opening the Rust installation webpage.")
+                            webbrowser.open('https://www.rust-lang.org/tools/install')
+                            break  
+
+                    
                 clear()
                 command = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {module}"
                 os.system(command)
