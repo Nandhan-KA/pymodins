@@ -1,6 +1,7 @@
 import os
 import getpass
 import sys
+import pip
 import urllib.request
 from datetime import datetime
 import subprocess
@@ -41,10 +42,25 @@ def banner():
     console.print("Creator: Nandhan K", style="bold cyan")
     console.print("Github: @github.com/Nandhan-KA", style="bold yellow")
 
-
 def sys_info():
     print("System Platform:", sys.platform)
     print("Python verion:", sys.version)
+    try:
+        pip_version = subprocess.check_output(['pip', '--version']).decode().strip()
+        print("pip version:", pip_version)
+    except Exception as e:
+        print("Error:", e,"Reinstall Python with PIP and add PIP to the System PATH")
+
+def upgrade_pip():
+    try:
+        installed_version = pip.__version__
+
+        latest_pip_version_output = subprocess.check_output(['pip', 'install', '--upgrade', 'pip']).decode().strip()
+        print("Latest pip version output:", latest_pip_version_output)
+
+        print("pip is already up to date" if installed_version == pip.__version__ else f"pip upgraded from version {installed_version} to version {pip.__version__}")
+    except Exception as e:
+        print("Error:", e)
 
 def clear():
     return os.system('cls')
@@ -62,10 +78,10 @@ def install_vscode_build_tools():
 
     def install_chocolatey():
         choco_install_cmd = (
-            '@"%"SystemRoot%"\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" '
-            '-NoProfile -InputFormat None -ExecutionPolicy Bypass -Command '
-            '"iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'))" '
-            '&& SET "PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin"'
+            'runas /user:Administrator @"%"SystemRoot%"\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" '
+        '-NoProfile -InputFormat None -ExecutionPolicy Bypass -Command '
+        '"iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'))" '
+        '&& SET "PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin"'
         )
         return run_command(choco_install_cmd)
 
@@ -190,10 +206,11 @@ jupyter_modules = [
 
 def installer():
     if internet():
+        upgrade_pip()
         clear()
         banner()
         sys_info()
-
+        
         module_types = [
             'Basic Modules', 'Advanced Modules', 'Science Modules', 'Computer Vision Modules',
             'Machine Learning Modules', 'Deep Learning Modules', 'Full Stack Development Modules',
@@ -345,6 +362,7 @@ def run():
     installer()
 
 def install_basic_modules():
+    banner()
     selected_option = 1
     clear()
     module_types = [
@@ -441,6 +459,7 @@ def install_basic_modules():
 
 
 def install_advanced_modules():
+    banner()
     selected_option = 2
     clear()
     module_types = [
@@ -537,6 +556,7 @@ def install_advanced_modules():
 
 
 def install_machinelearning_modules():
+    banner()
     selected_option = 5
     clear()
     module_types = [
@@ -632,6 +652,7 @@ def install_machinelearning_modules():
 
 
 def install_deeplearning_modules():
+    banner()
     selected_option = 6
     clear()
     module_types = [
@@ -727,6 +748,7 @@ def install_deeplearning_modules():
 
 
 def install_fullstack_modules():
+    banner()
     selected_option = 7
     clear()
     module_types = [
@@ -822,6 +844,7 @@ def install_fullstack_modules():
 
 
 def install_science_modules():
+    banner()
     selected_option = 3
     clear()
     module_types = [
@@ -916,6 +939,7 @@ def install_science_modules():
                 installer()
 
 def install_computervision_modules():
+    banner()
     selected_option = 4
     clear()
     module_types = [
@@ -1033,6 +1057,7 @@ def install_computervision_modules():
                 installer()
 
 def install_network_modules():
+    banner()
     selected_option = 8
     clear()
     module_types = [
@@ -1128,6 +1153,7 @@ def install_network_modules():
 
 
 def install_build_modules():
+    banner()
     selected_option = 9
     clear()
     module_types = [
@@ -1174,6 +1200,9 @@ def install_build_modules():
             for module in modules:
                 if module == 'rust':
                     pymsgbox.alert("This Modules Required VSBuild Tools")
+                    print("Installing VSBuild Tools")
+                    install_vscode_build_tools()
+                    clear
                     print("Module rust needs to be installed separately.")
                     x = input("Do you want to install Rust? (y/n): ").lower()
                     if x == "y":
@@ -1223,9 +1252,13 @@ def install_build_modules():
                 python_folder = versions[int(
                     input("Select your Python folder (1 or 2): ")) - 1]
             else:
-                python_folder = str(*versions)
+                python_folder = str(*versions) 
                 
             if selected_module == 'rust':
+                pymsgbox.alert("This Modules Required VSBuild Tools")
+                print("Installing VSBuild Tools")
+                install_vscode_build_tools()
+                clear
                 pymsgbox.alert("This Modules Required VSBuild Tools")
                 print("Module rust needs to be installed separately.")
                 x = input("Do you want to install Rust? (y/n): ").lower()
@@ -1248,6 +1281,7 @@ def install_build_modules():
 
 
 def install_jupyter_modules():
+    banner()
     selected_option = 10
     clear()
     module_types = [

@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pymodins
-Version: 2.0.1
+Version: 2.0.3
 Summary: A module to install various Python packages.
 Home-page: https://github.com/Nandhan-KA/pymodins
 Author: Nandhan K
@@ -105,26 +105,35 @@ SOFTWARE.
 
 ```
 
-              \ |   \    \ | _ \ |  |   \    \ |    |  / 
-             .  |  _ \  .  | |  |__ |  _ \  .  |    . <  
-            _|\_|_/  _\_|\_|___/_| _|_/  _\_|\_|   _|\_\ 
+ _______  ____  ____  ____    ____   ___   ______   _____  ____  _____   ______   
+|_   __ \|_  _||_  _||_   \  /   _|.'   `.|_   _ `.|_   _||_   \|_   _|.' ____ \  
+  | |__) | \ \  / /    |   \/   | /  .-.  \ | | `. \ | |    |   \ | |  | (___ \_| 
+  |  ___/   \ \/ /     | |\  /| | | |   | | | |  | | | |    | |\ \| |   _.____`.  
+ _| |_      _|  |_    _| |_\/_| |_\  `-'  /_| |_.' /_| |_  _| |_\   |_ | \____) | 
+|_____|    |______|  |_____||_____|`.___.'|______.'|_____||_____|\____| \______.' 
 
+    
 Creator: Nandhan K
 Github: @github.com/Nandhan-KA
+System Platform: win32
+Python verion: 3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:37:50) [MSC v.1916 64 bit (AMD64)]
+pip version: pip 24.0 from c:\users\{username}\appdata\local\programs\python\python38\lib\site-packages\pip (python 3.8)
 
-            1. Basic Modules
-            2. Advanced Modules
-            3. Science Modules
-            4. Computer Vision Modules
-            5. Machine Learning Modules
-            6. Deep Learning Modules
-            7. Full Stack Development Modules
-            8. Network Modules
-            9. Build Modules
-            10.Jupyter Modules
+Please select the type of modules you want to install:
 
-Enter the number corresponding to the module type:
+1. Basic Modules
+2. Advanced Modules
+3. Science Modules
+4. Computer Vision Modules
+5. Machine Learning Modules
+6. Deep Learning Modules
+7. Full Stack Development Modules
+8. Network Modules
+9. Build Modules
+10. Jupyter Modules
+
+Enter the number corresponding to your choice: 
 ```
 
-# ðŸŽ‰ Thank you for using this project!
-# Feel free to ask your queries ðŸ˜Š
+# Thank you for using this project!
+# Feel free to ask your queries 
