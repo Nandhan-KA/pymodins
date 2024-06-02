@@ -10,3 +10,12 @@
 2024-05-20 01:16:06 - Installed pyyaml from Basic Modules in Python38
 2024-05-20 01:16:09 - Installed python-dotenv from Basic Modules in Python38
 2024-05-20 01:16:12 - Installed pillow from Basic Modules in Python38
+2024-06-02 23:36:05 - Installed jupyter from Jupyter Modules in Python38
+2024-06-02 23:36:15 - Installed notebook from Jupyter Modules in Python38
+2024-06-02 23:36:24 - Installed jupyterlab from Jupyter Modules in Python38
+2024-06-03 00:31:09 - Installed pep517 from Build Modules in Python38
+2024-06-03 00:31:13 - Installed setuptools from Build Modules in Python38
+2024-06-03 00:31:29 - Installed build from Build Modules in Python38
+2024-06-03 00:31:34 - Installed wheel from Build Modules in Python38
+2024-06-03 00:32:49 - Installed pep517 from Build Modules in Python38
+2024-06-03 00:32:54 - Installed setuptools from Build Modules in Python38
