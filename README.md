@@ -7,12 +7,15 @@
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install pymodins.
 
 ```bash
+python setup.py install 
+        or
 pip install pymodins
 ```
 
 ## Usage
 
-```python
+```Python 
+
 import pymodins
 
 # Displays all Domains
