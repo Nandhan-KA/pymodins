@@ -30,15 +30,11 @@ html_context = {
     'google_site_verification': 'w6WcqTlHnT1hyck_miLc4L2PWN7i6p2xa78lEK65cME'  # Add your Google site verification code here
 }
 
-
 def setup(app):
     app.add_config_value('google_site_verification', '', 'html')
-    app.add_html_theme_option('google_site_verification', '')
-
     app.connect('html-page-context', add_meta_tags)
 
 def add_meta_tags(app, pagename, templatename, context, doctree):
     context['metatags'] = f"""
         <meta name="google-site-verification" content="{app.config.google_site_verification}">
     """
-
