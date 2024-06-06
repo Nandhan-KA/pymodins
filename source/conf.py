@@ -31,7 +31,7 @@ html_context = {
 }
 
 def setup(app):
-    app.add_config_value('google_site_verification', '', 'html')
+    app.add_config_value('google_site_verification', 'w6WcqTlHnT1hyck_miLc4L2PWN7i6p2xa78lEK65cME', 'html')
     app.connect('html-page-context', add_meta_tags)
 
 def add_meta_tags(app, pagename, templatename, context, doctree):
