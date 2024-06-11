@@ -105,7 +105,7 @@ SOFTWARE.
 ```
 
 ## Expected Output
-![pymodins](https://github.com/Nandhan-KA/pymodins/blob/main/source/run.png)
+![pymodins](source/run.png)
 
 # Thank you for using this project!
 # Feel free to ask your queries
