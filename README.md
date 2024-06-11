@@ -51,6 +51,23 @@ pymodins.install_build_modules()
 #install Jupyter Modules
 pymodins.install_jupyter_modules()
 
+#install data visualization modules
+pymodins.install_data_visualization_modules()
+
+#install database modules
+pymodins.install_database_modules()
+
+#install CyberSecurity modules
+pymodins.install_CyberSecurity_modules()
+
+#install cloudcomputing modules
+pymodins.install_cloudcomputing_modules()
+
+#install devops modules
+pymodins.install_devops_modules()
+
+#install bigdata modules
+pymodins.install_bigdata_modules()
 ```
 
 ## Contributing
@@ -88,38 +105,7 @@ SOFTWARE.
 ```
 
 ## Expected Output
-
-```
-
- _______  ____  ____  ____    ____   ___   ______   _____  ____  _____   ______   
-|_   __ \|_  _||_  _||_   \  /   _|.'   `.|_   _ `.|_   _||_   \|_   _|.' ____ \  
-  | |__) | \ \  / /    |   \/   | /  .-.  \ | | `. \ | |    |   \ | |  | (___ \_| 
-  |  ___/   \ \/ /     | |\  /| | | |   | | | |  | | | |    | |\ \| |   _.____`.  
- _| |_      _|  |_    _| |_\/_| |_\  `-'  /_| |_.' /_| |_  _| |_\   |_ | \____) | 
-|_____|    |______|  |_____||_____|`.___.'|______.'|_____||_____|\____| \______.' 
-
-    
-Creator: Nandhan K
-Github: @github.com/Nandhan-KA
-System Platform: win32
-Python verion: 3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:37:50) [MSC v.1916 64 bit (AMD64)]
-pip version: pip 24.0 from c:\users\{username}\appdata\local\programs\python\python38\lib\site-packages\pip (python 3.8)
-
-Please select the type of modules you want to install:
-
-1. Basic Modules
-2. Advanced Modules
-3. Science Modules
-4. Computer Vision Modules
-5. Machine Learning Modules
-6. Deep Learning Modules
-7. Full Stack Development Modules
-8. Network Modules
-9. Build Modules
-10. Jupyter Modules
-
-Enter the number corresponding to your choice: 
-```
+![pymodins](https://github.com/Nandhan-KA/pymodins/blob/main/source/run.png)
 
 # Thank you for using this project!
-# Feel free to ask your queries 
+# Feel free to ask your queries

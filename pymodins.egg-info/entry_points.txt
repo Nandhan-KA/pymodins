@@ -1,2 +1,3 @@
 [console_scripts]
 pymodins = pymodins.installer:run
+pymodins.creator = pymodins.installer:creator

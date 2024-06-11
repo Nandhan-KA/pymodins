@@ -58,8 +58,20 @@ def banner_nointernet():
     console.print("\t Github: @github.com/Nandhan-KA", style="bold yellow")
     console.print(" \n \t This Project Requires Internet Connection 🌐 ", style="bold yellow")
 
-import sys
-import subprocess
+def creator():
+    console = Console()
+    ascii_art="""              
+ _______  ____  ____  ____    ____   ___   ______   _____  ____  _____   ______   
+|_   __ \|_  _||_  _||_   \  /   _|.'   `.|_   _ `.|_   _||_   \|_   _|.' ____ \  
+  | |__) | \ \  / /    |   \/   | /  .-.  \ | | `. \ | |    |   \ | |  | (___ \_| 
+  |  ___/   \ \/ /     | |\  /| | | |   | | | |  | | | |    | |\ \| |   _.____`.  
+ _| |_      _|  |_    _| |_\/_| |_\  `-'  /_| |_.' /_| |_  _| |_\   |_ | \____) | 
+|_____|    |______|  |_____||_____|`.___.'|______.'|_____||_____|\____| \______.' 
+                                                                                
+    """
+    console.print(ascii_art, style="bold yellow")
+    console.print("\t Creator: Nandhan K", style="bold cyan")
+    console.print("\t Github: @github.com/Nandhan-KA", style="bold yellow")
 
 def sys_info():
     console = Console()

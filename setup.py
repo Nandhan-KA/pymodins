@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 if platform.system() == "Windows":
     setup(
         name="pymodins",
-        version="2.0.7",
+        version="2.1.2",
         packages=find_packages(),
         install_requires=[
             "rich",
@@ -13,6 +13,7 @@ if platform.system() == "Windows":
         entry_points={
             "console_scripts": [
                 "pymodins=pymodins.installer:run",
+                "pymodins.creator=pymodins.installer:creator"
             ],
         },
         author="Nandhan K",
