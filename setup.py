@@ -4,11 +4,10 @@ from setuptools import setup, find_packages
 if platform.system() == "Windows":
     setup(
         name="pymodins",
-        version="2.1.2",
+        version="2.1.3",
         packages=find_packages(),
         install_requires=[
-            "rich",
-            "pymsgbox"
+            "rich"
         ],
         entry_points={
             "console_scripts": [
