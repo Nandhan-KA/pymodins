@@ -2054,7 +2054,4 @@ def run():
     else:
         run_as_admin()
         if is_admin():  
-            installer()
-            
-            
-            
+            installer()            
