@@ -7,7 +7,6 @@ from datetime import datetime
 import subprocess
 import ctypes
 import webbrowser
-import pymsgbox
 from rich.console import Console
 
 user = getpass.getuser()
@@ -87,44 +86,37 @@ def sys_info():
     except Exception as e:
         console.print("Error:", e, "Reinstall Python with PIP and add PIP to the System PATH",style="bold white")
 
+
 def is_admin():
-    """
-    Check if the script is running with administrative privileges.
-    
-    :return: True if the script is running as admin, False otherwise.
-    """
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
     except:
         return False
 
 def run_as_admin():
-    """
-    Restart the script with administrative privileges.
-    """
-    try:
-        subprocess.run([
-            'runas',
-            '/user:Administrator',
-            f'\"{sys.executable}\" \"{os.path.abspath(__file__)}\"'
-        ], check=True)
-        sys.exit(0)
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to run command as admin: {e}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    if sys.platform == "win32":
+        script = os.path.abspath(sys.argv[0])
+        params = ' '.join([script] + sys.argv[1:])
+        try:
+            ctypes.windll.shell32.ShellExecuteW(
+                None, "runas", sys.executable, params, None, 1
+            )
+            sys.exit(0)
+        except Exception as e:
+            print(f"Failed to run command as admin: {e}")
+            raise PermissionError("Failed to acquire administrative privileges.")
+    else:
+        raise RuntimeError("This function is only implemented for Windows.")
 
 def upgrade_pip():
     try:
-        installed_version = pip.__version__
-
-        latest_pip_version_output = subprocess.check_output(['pip', 'install', '--upgrade', 'pip']).decode().strip()
-        print("Latest pip version output:", latest_pip_version_output)
-
-        print("pip is already up to date" if installed_version == pip.__version__ else f"pip upgraded from version {installed_version} to version {pip.__version__}")
+        subprocess.run(['python.exe', '-m', 'pip', 'install', '--upgrade', 'pip'], check=True)
+        print(f"pip upgraded to version {pip.__version__}")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to upgrade pip: {e}")
     except Exception as e:
-        print("Error:", e)
-
+        print(f"Error: {e}")
+        
 def clear():
     return os.system('cls')
 
@@ -296,10 +288,9 @@ devops_modules = [
 
 big_data_modules = [
     'pyspark', 'hadoop', 'kafka', 'dask', 'ray', 'modin', 'polars', 'koalas', 'pyarrow', 'fastparquet', 
-    'pydoop', 'pyhive', 'mrjob', 'h5py', 'tables', 'zarr', 'petastorm', 'cudf', 'datashader', 'blaze', 
+    'pydoop', 'pyhive', 'mrjob', 'h5py', 'tables', 'zarr',  'petastorm', 'cudf', 'datashader', 'blaze', 
     'turicreate', 'pandas', 'pandas-profiling'
 ]
-
 
 
 module_types = [
@@ -386,7 +377,6 @@ def installer():
                         if module == 'dlib':
                             result = ctypes.windll.user32.MessageBoxW(0, "Do you want to continue?", "Alert", 0x40 | 0x1)
                             if result==1:
-                                pymsgbox.alert("This Modules Required VSBuild Tools")
                                 print("Module dlib has to be installed after you have installed visual studio build tools")
                                 x = input("Do you want to install VS Build Tools? (y/n): ").lower()
                                 if x == "y":
@@ -401,7 +391,6 @@ def installer():
                         if module == 'rust':
                             result = ctypes.windll.user32.MessageBoxW(0, "This Modules Required VSBuild tools.\n Do you want to continue?", "Alert", 0x40 | 0x1)
                             if result==1:
-                                pymsgbox.alert("This Modules Required VSBuild Tools")
                                 print("Module rust needs to be installed separately.")
                                 x = input("Do you want to install Rust? (y/n): ").lower()
                                 if x == "y":
@@ -415,9 +404,15 @@ def installer():
                                 pass
 
                         clear()
-                        command = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {module}"
-                        os.system(command)
-                        log_mod(selected_module_type, module, python_folder)
+                        
+                        try:
+                            command = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {module}"
+                            os.system(command)
+                            log_mod(selected_module_type, module, python_folder)
+                        except:
+                            command = f"cd C:\\Program Files\\python\\{python_folder}\\Scripts && pip.exe install {module}"
+                            os.system(command)
+                            log_mod(selected_module_type, module, python_folder)
 
                     print("\nAll modules installed successfully.")
                     more = input("Do you want to install more? (Yes/No): ")
@@ -476,8 +471,14 @@ def installer():
                                 webbrowser.open('https://www.rust-lang.org/tools/install')
                                 sys.exit()  
 
-                    command = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {selected_module}"
-                    os.system(command)
+                    try:
+                        path1 = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {module}"
+                        os.system(path1)
+                        log_mod(selected_module_type, module, python_folder)
+                    except:
+                        path2 = f"cd C:\\Program Files\\python\\{python_folder}\\Scripts && pip.exe install {module}"
+                        os.system(path2)
+                        log_mod(selected_module_type, module, python_folder)
 
                     more = input("Do you want to install more? (Yes/No): ")
                     if more.lower() in ["no", "n"]:
@@ -502,9 +503,8 @@ def installer():
     else:
         banner_nointernet()
 
-
 def install_basic_modules():
-    if internet() and sys.platform == 'win32':
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -592,12 +592,14 @@ def install_basic_modules():
         banner()
         Console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
         return
-    
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_basic_modules()
     else:
         banner_nointernet()
 
 def install_advanced_modules():
-    if internet():
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -686,13 +688,16 @@ def install_advanced_modules():
         banner()
         Console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
         return
-    
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_advanced_modules()
+        
     else:
         banner_nointernet()
 
 
 def install_machinelearning_modules():
-    if internet():
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -780,13 +785,15 @@ def install_machinelearning_modules():
         banner()
         Console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
         return
-    
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_machinelearning_modules()
     else:
         banner_nointernet()
 
 
 def install_deeplearning_modules():
-    if internet():
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -874,13 +881,15 @@ def install_deeplearning_modules():
         banner()
         Console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
         return
-    
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_deeplearning_modules()
     else:
         banner_nointernet()
 
 
 def install_fullstack_modules():
-    if internet():
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -968,13 +977,15 @@ def install_fullstack_modules():
         banner()
         Console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
         return
-    
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_fullstack_modules()
     else:
         banner_nointernet()
 
 
 def install_science_modules():
-    if internet():
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -1062,13 +1073,15 @@ def install_science_modules():
         banner()
         Console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
         return
-    
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_science_modules()
     else:
         banner_nointernet()
 
       
 def install_computervision_modules():
-    if internet():
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -1104,7 +1117,7 @@ def install_computervision_modules():
 
                 for module in modules:
                     if module == 'dlib':
-                        pymsgbox.alert("This Modules Required VSBuild Tools")
+                         
                         print("Module dlib has to be installed after you have installed visual studio build tools")
                         x = input("Do you want to install VS Build Tools? (y/n): ").lower()
                         if x == "y":
@@ -1155,7 +1168,7 @@ def install_computervision_modules():
                     python_folder = str(*versions)
                     
                 if selected_module == 'dlib':
-                    pymsgbox.alert("This Modules Required VSBuild Tools")
+                     
                     print("Module dlib has to be installed after you have installed visual studio build tools")
                     x = input("Do you want to install VS Build Tools? (y/n): ").lower()
                     if x == "y":
@@ -1179,13 +1192,15 @@ def install_computervision_modules():
         banner()
         Console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
         return
-    
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_computervision_modules()
     else:
         banner_nointernet()
 
        
 def install_network_modules():
-    if internet():
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -1273,13 +1288,15 @@ def install_network_modules():
         banner()
         Console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
         return
-    
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_network_modules()
     else:
         banner_nointernet()
 
 
 def install_build_modules():
-    if internet():
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -1315,7 +1332,7 @@ def install_build_modules():
 
                 for module in modules:
                     if module == 'rust':
-                        pymsgbox.alert("This Modules Required VSBuild Tools")
+                         
                         print("Installing VSBuild Tools")
                         install_vscode_build_tools()
                         clear
@@ -1369,11 +1386,11 @@ def install_build_modules():
                     python_folder = str(*versions) 
                     
                 if selected_module == 'rust':
-                    pymsgbox.alert("This Modules Required VSBuild Tools")
+                     
                     print("Installing VSBuild Tools")
                     install_vscode_build_tools()
                     clear
-                    pymsgbox.alert("This Modules Required VSBuild Tools")
+                     
                     print("Module rust needs to be installed separately.")
                     x = input("Do you want to install Rust? (y/n): ").lower()
                     if x == "y":
@@ -1397,12 +1414,14 @@ def install_build_modules():
         banner()
         Console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
         return
-    
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_build_modules()
     else:
         banner_nointernet()
 
 def install_jupyter_modules():
-    if internet():
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -1488,12 +1507,14 @@ def install_jupyter_modules():
         banner()
         Console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
         return
-    
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_jupyter_modules()
     else:
         banner_nointernet()
 
 def install_data_visualization_modules():
-    if internet() and sys.platform == 'win32':
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -1581,13 +1602,15 @@ def install_data_visualization_modules():
         banner()
         console = Console()
         console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
-          
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_data_visualization_modules()    
     else:
         banner_nointernet()
 
 
 def install_database_modules():
-    if internet() and sys.platform == 'win32':
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -1675,14 +1698,16 @@ def install_database_modules():
         banner()
         console = Console()
         console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
-          
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_database_modules()   
     else:
         banner_nointernet()
 
 
 
 def install_CyberSecurity_modules():
-    if internet() and sys.platform == 'win32':
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -1770,13 +1795,15 @@ def install_CyberSecurity_modules():
         banner()
         console = Console()
         console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
-          
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_CyberSecurity_modules()    
     else:
         banner_nointernet()
 
 
 def install_cloudcomputing_modules():
-    if internet() and sys.platform == 'win32':
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -1864,13 +1891,15 @@ def install_cloudcomputing_modules():
         banner()
         console = Console()
         console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
-          
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_cloudcomputing_modules()    
     else:
         banner_nointernet()
 
 
 def install_devops_modules():
-    if internet() and sys.platform == 'win32':
+    if internet() and sys.platform == 'win32' and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -1958,13 +1987,15 @@ def install_devops_modules():
         banner()
         console = Console()
         console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
-          
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_devops_modules()     
     else:
         banner_nointernet()
 
 
 def install_bigdata_modules():
-    if internet() and sys.platform == 'win32':
+    if internet() and sys.platform == 'win32'and is_admin():
         upgrade_pip()
         banner()
         sys_info()
@@ -2052,14 +2083,24 @@ def install_bigdata_modules():
         banner()
         console = Console()
         console.print(" \t This program is designed to run on Windows systems only.", style="bold yellow")
-          
+    elif internet() and sys.platform == 'win32' and not is_admin():
+        run_as_admin()
+        install_bigdata_modules()     
     else:
         banner_nointernet()
 
 def run():
-    if is_admin():  
-        installer()
-    else:
-        run_as_admin()
+    try:
         if is_admin():  
-            installer()            
+            installer()
+        else:
+            run_as_admin()
+            if is_admin():  
+                installer()
+            else:
+                raise PermissionError("Failed to acquire administrative privileges.")
+    except PermissionError as e:
+        print(e)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+

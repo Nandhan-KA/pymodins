@@ -7,8 +7,7 @@ if platform.system() == "Windows":
         version="2.1.4",
         packages=find_packages(),
         install_requires=[
-            "rich",
-            "pymodins"
+            "rich"
         ],
         entry_points={
             "console_scripts": [
@@ -26,7 +25,9 @@ if platform.system() == "Windows":
             "python package installer", 
             "Nandhan-KA", 
             "PYMODINS", 
-            "pymodins"
+            "pymodins",
+            "Nandhan K",
+            "Nandhan"
         ],
         long_description=open('README.md').read(),
         long_description_content_type='text/markdown',
