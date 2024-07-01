@@ -384,27 +384,35 @@ def installer():
 
                     for module in modules:
                         if module == 'dlib':
-                            pymsgbox.alert("This Modules Required VSBuild Tools")
-                            print("Module dlib has to be installed after you have installed visual studio build tools")
-                            x = input("Do you want to install VS Build Tools? (y/n): ").lower()
-                            if x == "y":
-                                if install_vscode_build_tools():
-                                    print("Build tools installed successfully.")
-                                else:
-                                    print("Failed to install build tools.")
-                                    continue  
+                            result = ctypes.windll.user32.MessageBoxW(0, "Do you want to continue?", "Alert", 0x40 | 0x1)
+                            if result==1:
+                                pymsgbox.alert("This Modules Required VSBuild Tools")
+                                print("Module dlib has to be installed after you have installed visual studio build tools")
+                                x = input("Do you want to install VS Build Tools? (y/n): ").lower()
+                                if x == "y":
+                                    if install_vscode_build_tools():
+                                        print("Build tools installed successfully.")
+                                    else:
+                                        print("Failed to install build tools.")
+                                        continue
+                            else:
+                                pass  
                         
                         if module == 'rust':
-                            pymsgbox.alert("This Modules Required VSBuild Tools")
-                            print("Module rust needs to be installed separately.")
-                            x = input("Do you want to install Rust? (y/n): ").lower()
-                            if x == "y":
-                                if install_rust():
-                                    print("Rust installed successfully.")
-                                else:
-                                    print("Failed to install Rust. Opening the Rust installation webpage.")
-                                    webbrowser.open('https://www.rust-lang.org/tools/install')
-                                    break  
+                            result = ctypes.windll.user32.MessageBoxW(0, "This Modules Required VSBuild tools.\n Do you want to continue?", "Alert", 0x40 | 0x1)
+                            if result==1:
+                                pymsgbox.alert("This Modules Required VSBuild Tools")
+                                print("Module rust needs to be installed separately.")
+                                x = input("Do you want to install Rust? (y/n): ").lower()
+                                if x == "y":
+                                    if install_rust():
+                                        print("Rust installed successfully.")
+                                    else:
+                                        print("Failed to install Rust. Opening the Rust installation webpage.")
+                                        webbrowser.open('https://www.rust-lang.org/tools/install')
+                                        break  
+                            else:
+                                pass
 
                         clear()
                         command = f"cd C:\\Users\\{user}\\AppData\\Local\\Programs\\Python\\{python_folder}\\Scripts && pip.exe install {module}"
