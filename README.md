@@ -11,6 +11,21 @@
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
+
+## Features
+
+- Easy Installation: Install multiple Python packages with a single command.
+
+- Domain-Specific Packages: Choose from various - domains like Machine Learning, Deep Learning, Data Visualization, and more.
+
+- Beginner Friendly: Simplifies the process of setting up Python environments for beginners.
+
+- Automation: Automates the installation of commonly used Python packages.
+
+- Extensible: Open to contributions and can be extended to include more modules and features.
+
+
+
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to Install pymodins.
