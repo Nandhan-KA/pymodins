@@ -1,15 +1,15 @@
 # PYMODINS
 
-[pymodins](https://github.com/Nandhan-KA/pymodins) is more than just a tool for installing Python modules. It’s a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly install modules tailored to their specific needs, whether it’s basic modules for general programming tasks or advanced modules for specialized applications..
+[pymodins](https://github.com/Nandhan-KA/pymodins) is more than just a tool for installing Python modules. It’s a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly Install modules tailored to their specific needs, whether it’s basic modules for general programming tasks or advanced modules for specialized applications..
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install pymodins.
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to Install pymodins.
 
 ```bash
-python setup.py install 
+python setup.py Install 
         or
-pip install pymodins
+pip Install pymodins
 ```
 
 ## Usage
@@ -27,53 +27,53 @@ import pymodins
 pymodins.run()
 ```
 
-# Install Basic Modules
+Install Basic Modules
 ```pymodins.install_basic_modules()```
 
-# Install Advanced Modules
+Install Advanced Modules
 
 ```pymodins.install_advanced_modules()```
 
-# Install Science Modules
+Install Science Modules
 ```pymodins.install_science_modules()```
 
-# Install Computer Vision Modules
+Install Computer Vision Modules
 ```pymodins.install_computervision_modules()```
 
-# Install MachineLearning Modules()
+Install MachineLearning Modules()
 ```pymodins.install_machinelearning_modules()```
 
-# Install Deep Learning Modules
+Install Deep Learning Modules
 ```pymodins.install_deeplearning_modules()```
 
-# Install Full Stack Development Modules
+Install Full Stack Development Modules
 ```pymodins.install_fullstack_modules()```
 
-# Install Network Modules
+Install Network Modules
 ```pymodins.install_network_modules()```
 
-# Install Build Modules
+Install Build Modules
 ```pymodins.install_build_modules()```
 
-# Install Jupyter Modules
+Install Jupyter Modules
 ```pymodins.install_jupyter_modules()```
 
-# Install data visualization modules
+Install Data visualization modules
 ```pymodins.install_data_visualization_modules()```
 
-# Install database modules
+Install Database modules
 ```pymodins.install_database_modules()```
 
-# Install CyberSecurity modules
+Install CyberSecurity modules
 ```pymodins.install_CyberSecurity_modules()```
 
-# Install cloudcomputing modules
+Install Cloudcomputing modules
 ```pymodins.install_cloudcomputing_modules()```
 
-# Install devops modules
+Install Devops modules
 ```pymodins.install_devops_modules()```
 
-# Install bigdata modules
+Install Bigdata modules
 ```pymodins.install_bigdata_modules()```
 ```
 
