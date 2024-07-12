@@ -12,7 +12,7 @@
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
 
-## Features
+## ✨ Features
 
 - Easy Installation: Install multiple Python packages with a single command.
 
@@ -26,7 +26,7 @@
 
 
 
-## Installation
+## 🚀 Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to Install pymodins.
 
@@ -36,7 +36,7 @@ python setup.py Install
 pip Install pymodins
 ```
 
-## Usage
+## 💻 Usage
 
 
 Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell
@@ -130,14 +130,14 @@ pymodins.install_bigdata_modules()
 ```
 
 
-## Contributing
+## 🤝 Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
-## License
+## 📜 License
 
 [MIT](https://choosealicense.com/licenses/mit/)
 ```
@@ -164,25 +164,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## Expected Output
+## 🎯 Expected Output
 ![pymodins](source/run.png)
 
 
-## Authors
+## 👥 Authors
 
 - [@Nandhan K](https://www.github.com/Nandhan-Ka)
 
 
-## Documentation
+## 📜 Documentation
 
 [Documentation](https://pymodins.readthedocs.io/en/latest/)
 
 
-## Support
+## 💬 Support
 
 For support, email  nandhan2003alamelu@gmail.com 
 
+# 🌈 Thank you for using this project!
 
+# Feel free to ask your queries
+
+# Feel free to Modify
 
 
 
