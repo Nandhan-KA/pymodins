@@ -5,7 +5,7 @@
 project = 'pymodins'
 copyright = '2024, Nandhan K'
 author = 'Nandhan K'
-release = '2.1.4'
+release = '2.1.6'
 
 # -- General configuration ---------------------------------------------------
 

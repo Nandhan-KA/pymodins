@@ -2,7 +2,7 @@
 Welcome to pymodins's documentation!
 =====================================
 
-Pymodins 
+Pymodins is more than just a tool for installing Python modules. It’s a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly install modules tailored to their specific needs, whether it’s basic modules for general programming tasks or advanced modules for specialized applications.
 
 To install with pip, run ``pip install pymodins``
 
@@ -20,7 +20,7 @@ pymodins has several features:
 Examples
 ========
 
-User can directly run by typing ``pymodins`` in command prompt
+User can directly run by typing ``pymodins`` in Administrator command prompt
 
 
 .. code:: python

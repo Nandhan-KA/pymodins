@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 if platform.system() == "Windows":
     setup(
         name="pymodins",
-        version="2.1.4",
+        version="2.1.6",
         packages=find_packages(),
         install_requires=[
             "rich"
@@ -17,7 +17,7 @@ if platform.system() == "Windows":
         },
         author="Nandhan K",
         author_email="nandhan2003alamelu@gmail.com",
-        description="A module to install various Python packages.",
+        description="Pymodins is more than just a tool for installing Python modules. It's a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly install modules tailored to their specific needs, whether it's basic modules for general programming tasks or advanced modules for specialized applications.",
         keywords=[
             "Python Module Installer", 
             "Python Package Installer", 

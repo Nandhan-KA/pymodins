@@ -11,6 +11,29 @@ from rich.console import Console
 
 user = getpass.getuser()
 
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except Exception as e:
+        print(f"Error checking admin status: {e}")
+        return False
+
+def run_as_admin():
+    if not is_admin():
+        script = os.path.abspath(sys.argv[0])
+        params = ' '.join([f'"{arg}"' for arg in sys.argv[1:]]) 
+        print(f"Re-running {script} with admin privileges.")
+        try:
+            subprocess.check_call(["powershell.exe", "-Command", f"Start-Process 'python' -ArgumentList '\"{script}\" {params}' -Verb RunAs"])
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Error running as admin: {e}")
+            return False
+    else:
+        print("Already running with admin privileges.")
+        return True
+
+
 def internet(ping="https://google.com"):
     try:
         urllib.request.urlopen(ping)
@@ -35,7 +58,7 @@ def banner():
   |  ___/   \ \/ /     | |\  /| | | |   | | | |  | | | |    | |\ \| |   _.____`.  
  _| |_      _|  |_    _| |_\/_| |_\  `-'  /_| |_.' /_| |_  _| |_\   |_ | \____) | 
 |_____|    |______|  |_____||_____|`.___.'|______.'|_____||_____|\____| \______.' 
-                                                                 V2.1.3               
+                                                                 V2.1.6               
     """
     console.print(ascii_art, style="bold yellow")
     console.print("Creator: Nandhan K", style="bold cyan")
@@ -50,7 +73,7 @@ def banner_nointernet():
   |  ___/   \ \/ /     | |\  /| | | |   | | | |  | | | |    | |\ \| |   _.____`.  
  _| |_      _|  |_    _| |_\/_| |_\  `-'  /_| |_.' /_| |_  _| |_\   |_ | \____) | 
 |_____|    |______|  |_____||_____|`.___.'|______.'|_____||_____|\____| \______.' 
-                                                                 V2.1.3                
+                                                                 V2.1.6                
     """
     console.print(ascii_art, style="bold yellow")
     console.print("\t Creator: Nandhan K", style="bold cyan")
@@ -66,7 +89,7 @@ def creator():
   |  ___/   \ \/ /     | |\  /| | | |   | | | |  | | | |    | |\ \| |   _.____`.  
  _| |_      _|  |_    _| |_\/_| |_\  `-'  /_| |_.' /_| |_  _| |_\   |_ | \____) | 
 |_____|    |______|  |_____||_____|`.___.'|______.'|_____||_____|\____| \______.' 
-                                                                V2.1.3                 
+                                                                V2.1.6                
     """
     console.print(ascii_art, style="bold yellow")
     console.print("\t Creator: Nandhan K", style="bold cyan")
@@ -85,28 +108,7 @@ def sys_info():
             console.print("Admin Previledges: False",style="bold white")
     except Exception as e:
         console.print("Error:", e, "Reinstall Python with PIP and add PIP to the System PATH",style="bold white")
-
-
-def is_admin():
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        return False
-
-def run_as_admin():
-    if sys.platform == "win32":
-        script = os.path.abspath(sys.argv[0])
-        params = ' '.join([script] + sys.argv[1:])
-        try:
-            ctypes.windll.shell32.ShellExecuteW(
-                None, "runas", sys.executable, params, None, 1
-            )
-            sys.exit(0)
-        except Exception as e:
-            print(f"Failed to run command as admin: {e}")
-            raise PermissionError("Failed to acquire administrative privileges.")
-    else:
-        raise RuntimeError("This function is only implemented for Windows.")
+        
 
 def upgrade_pip():
     try:
@@ -133,11 +135,12 @@ def install_vscode_build_tools():
 
     def install_chocolatey():
         choco_install_cmd = (
-            'runas /user:Administrator @"%"SystemRoot%"\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" '
-        '-NoProfile -InputFormat None -ExecutionPolicy Bypass -Command '
-        '"iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'))" '
-        '&& SET "PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin"'
-        )
+                    'powershell.exe '
+                    '-NoProfile -InputFormat None -ExecutionPolicy Bypass -Command '
+                    '"iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'))" '
+                    '&& SET "PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin"'
+                )
+
         return run_command(choco_install_cmd)
 
     def install_vs_build_tools():
@@ -210,7 +213,7 @@ def install_rust():
 
 basic_modules = [
     'numpy', 'pandas', 'matplotlib', 'scipy', 'requests', 'beautifulsoup4', 'seaborn', 'tqdm', 'docutils', 'pyyaml', 'python-dotenv', 'pillow',
-      'datetime',  'statistics', 'glob',  'configparser'
+      'datetime',  'statistics',  'configparser'
 ]
 
 advanced_modules = [
@@ -2088,19 +2091,12 @@ def install_bigdata_modules():
         install_bigdata_modules()     
     else:
         banner_nointernet()
-
+        
 def run():
-    try:
-        if is_admin():  
-            installer()
+    if is_admin():
+        installer()  # Run installer directly if already admin
+    else:
+        if run_as_admin():
+            pass  # The elevated process will continue running the script
         else:
-            run_as_admin()
-            if is_admin():  
-                installer()
-            else:
-                raise PermissionError("Failed to acquire administrative privileges.")
-    except PermissionError as e:
-        print(e)
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-
+            raise PermissionError("Failed to acquire administrative privileges.")

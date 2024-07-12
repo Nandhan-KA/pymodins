@@ -1,6 +1,6 @@
 # PYMODINS
 
-[pymodins](https://github.com/Nandhan-KA/pymodins) is a Python Modules Installer for Developers and Peoples who are new to python.
+[pymodins](https://github.com/Nandhan-KA/pymodins) is more than just a tool for installing Python modules. It’s a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly install modules tailored to their specific needs, whether it’s basic modules for general programming tasks or advanced modules for specialized applications..
 
 ## Installation
 
@@ -13,6 +13,11 @@ pip install pymodins
 ```
 
 ## Usage
+
+
+Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell
+
+  or
 
 ```Python 
 
@@ -109,3 +114,4 @@ SOFTWARE.
 
 # Thank you for using this project!
 # Feel free to ask your queries
+# Feel free to Modify

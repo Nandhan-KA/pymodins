@@ -1,7 +1,7 @@
 Metadata-Version: 2.1
 Name: pymodins
-Version: 2.1.4
-Summary: A module to install various Python packages.
+Version: 2.1.6
+Summary: Pymodins is more than just a tool for installing Python modules. It's a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly install modules tailored to their specific needs, whether it's basic modules for general programming tasks or advanced modules for specialized applications.
 Home-page: https://github.com/Nandhan-KA/pymodins
 Author: Nandhan K
 Author-email: nandhan2003alamelu@gmail.com
@@ -31,7 +31,7 @@ Requires-Dist: rich
 
 # PYMODINS
 
-[pymodins](https://github.com/Nandhan-KA/pymodins) is a Python Modules Installer for Developers and Peoples who are new to python.
+[pymodins](https://github.com/Nandhan-KA/pymodins) is more than just a tool for installing Python modules. Itâ€™s a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly install modules tailored to their specific needs, whether itâ€™s basic modules for general programming tasks or advanced modules for specialized applications..
 
 ## Installation
 
@@ -44,6 +44,11 @@ pip install pymodins
 ```
 
 ## Usage
+
+
+Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell
+
+  or
 
 ```Python 
 
@@ -140,3 +145,4 @@ SOFTWARE.
 
 # Thank you for using this project!
 # Feel free to ask your queries
+# Feel free to Modify
