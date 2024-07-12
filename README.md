@@ -1,6 +1,15 @@
+
+![Logo](source/PYMODINS.png)
+
+
 # PYMODINS
 
 [pymodins](https://github.com/Nandhan-KA/pymodins) is more than just a tool for installing Python modules. It’s a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly Install modules tailored to their specific needs, whether it’s basic modules for general programming tasks or advanced modules for specialized applications..
+
+
+## Badges
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
 ## Installation
 
@@ -19,76 +28,92 @@ Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell
 
   or
 
-```Python 
-
+```bash 
 import pymodins
 # Displays all Domains
-pymodins.run()```
-
-```Python
-# Install Basic Modules
-pymodins.install_basic_modules()```
-
-```Python 
-# Install Advanced Modules
-pymodins.install_advanced_modules()```
-
-```Python 
-# Install Science Modules
-pymodins.install_science_modules()```
-
-```Python 
-# Install Computer Vision Modules
-pymodins.install_computervision_modules()```
-
-```Python 
-# Install MachineLearning Modules()
-pymodins.install_machinelearning_modules()```
-
-```Python 
-# Install Deep Learning Modules
-pymodins.install_deeplearning_modules()```
-
-```Python 
-# Install Full Stack Development Modules
-pymodins.install_fullstack_modules()```
-
-```Python 
-# Install Network Modules
-pymodins.install_network_modules()```
-
-```Python 
-#Install Build Modules
-pymodins.install_build_modules()```
-
-```Python 
-# Install Jupyter Modules
-pymodins.install_jupyter_modules()```
-
-```Python 
-# Install Data visualization modules
-pymodins.install_data_visualization_modules()```
-
-```Python 
-# Install Database modules
-pymodins.install_database_modules()```
-
-```Python 
-# Install CyberSecurity modules
-pymodins.install_CyberSecurity_modules()```
-
-```Python 
-# Install Cloudcomputing modules
-pymodins.install_cloudcomputing_modules()```
-
-```Python 
-#Install Devops modules
-pymodins.install_devops_modules()```
-
-```Python 
-# Install Bigdata modules
-pymodins.install_bigdata_modules()```
+pymodins.run()
 ```
+
+```bash
+# Install Basic Modules
+pymodins.install_basic_modules()
+```
+
+```bash 
+# Install Advanced Modules
+pymodins.install_advanced_modules()
+```
+
+```bash 
+# Install Science Modules
+pymodins.install_science_modules()
+```
+
+```bash 
+# Install Computer Vision Modules
+pymodins.install_computervision_modules()
+```
+
+```bash 
+# Install MachineLearning Modules()
+pymodins.install_machinelearning_modules()
+```
+
+```bash 
+# Install Deep Learning Modules
+pymodins.install_deeplearning_modules()
+```
+
+```bash 
+# Install Full Stack Development Modules
+pymodins.install_fullstack_modules()
+```
+
+```bash 
+# Install Network Modules
+pymodins.install_network_modules()
+```
+
+```bash 
+#Install Build Modules
+pymodins.install_build_modules()
+```
+
+```bash 
+# Install Jupyter Modules
+pymodins.install_jupyter_modules()
+```
+
+```bash 
+# Install Data visualization modules
+pymodins.install_data_visualization_modules()
+```
+
+```bash 
+# Install Database modules
+pymodins.install_database_modules()
+```
+
+```bash 
+# Install CyberSecurity modules
+pymodins.install_CyberSecurity_modules()
+```
+
+```bash 
+# Install Cloudcomputing modules
+pymodins.install_cloudcomputing_modules()
+```
+
+```bash 
+#Install Devops modules
+pymodins.install_devops_modules()
+```
+
+```bash 
+# Install Bigdata modules
+pymodins.install_bigdata_modules()
+```
+
 
 ## Contributing
 
@@ -127,8 +152,34 @@ SOFTWARE.
 ## Expected Output
 ![pymodins](source/run.png)
 
-# Thank you for using this project!
 
-# Feel free to ask your queries
+## Authors
 
-# Feel free to Modify
+- [@Nandhan K](https://www.github.com/Nandhan-Ka)
+
+
+## Documentation
+
+[Documentation](https://pymodins.readthedocs.io/en/latest/)
+
+
+## Support
+
+For support, email  nandhan2003alamelu@gmail.com 
+
+
+
+
+
+## FAQ
+
+#### Does this package can able to install packages of various domains?
+
+Answer: Yes
+
+#### Can users remodify this code and use it? 
+
+Answer: Yes
+
+
+

@@ -1,3 +1,4 @@
+.. image:: PYMODINS.png
 
 Welcome to pymodins's documentation!
 =====================================
