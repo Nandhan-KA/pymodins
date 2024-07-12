@@ -22,60 +22,73 @@ Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell
 ```Python 
 
 import pymodins
-
 # Displays all Domains
 pymodins.run()
 ```
+```Python
+# Install Basic Modules
+pymodins.install_basic_modules()```
 
-Install Basic Modules
-```pymodins.install_basic_modules()```
+```Python 
+# Install Advanced Modules
+pymodins.install_advanced_modules()```
 
-Install Advanced Modules
+```Python 
+# Install Science Modules
+pymodins.install_science_modules()```
 
-```pymodins.install_advanced_modules()```
+```Python 
+# Install Computer Vision Modules
+pymodins.install_computervision_modules()```
 
-Install Science Modules
-```pymodins.install_science_modules()```
+```Python 
+# Install MachineLearning Modules()
+pymodins.install_machinelearning_modules()```
 
-Install Computer Vision Modules
-```pymodins.install_computervision_modules()```
+```Python 
+# Install Deep Learning Modules
+pymodins.install_deeplearning_modules()```
 
-Install MachineLearning Modules()
-```pymodins.install_machinelearning_modules()```
+```Python 
+# Install Full Stack Development Modules
+pymodins.install_fullstack_modules()```
 
-Install Deep Learning Modules
-```pymodins.install_deeplearning_modules()```
+```Python 
+# Install Network Modules
+pymodins.install_network_modules()```
 
-Install Full Stack Development Modules
-```pymodins.install_fullstack_modules()```
+```Python 
+#Install Build Modules
+pymodins.install_build_modules()```
 
-Install Network Modules
-```pymodins.install_network_modules()```
+```Python 
+# Install Jupyter Modules
+pymodins.install_jupyter_modules()```
 
-Install Build Modules
-```pymodins.install_build_modules()```
+```Python 
+# Install Data visualization modules
+pymodins.install_data_visualization_modules()```
 
-Install Jupyter Modules
-```pymodins.install_jupyter_modules()```
+```Python 
+# Install Database modules
+pymodins.install_database_modules()```
 
-Install Data visualization modules
-```pymodins.install_data_visualization_modules()```
+```Python 
+# Install CyberSecurity modules
+pymodins.install_CyberSecurity_modules()```
 
-Install Database modules
-```pymodins.install_database_modules()```
+```Python 
+# Install Cloudcomputing modules
+pymodins.install_cloudcomputing_modules()```
 
-Install CyberSecurity modules
-```pymodins.install_CyberSecurity_modules()```
+```Python 
+#Install Devops modules
+pymodins.install_devops_modules()```
 
-Install Cloudcomputing modules
-```pymodins.install_cloudcomputing_modules()```
+```Python 
+# Install Bigdata modules
+pymodins.install_bigdata_modules()```
 
-Install Devops modules
-```pymodins.install_devops_modules()```
-
-Install Bigdata modules
-```pymodins.install_bigdata_modules()```
-```
 
 ## Contributing
 
