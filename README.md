@@ -23,8 +23,8 @@ Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell
 
 import pymodins
 # Displays all Domains
-pymodins.run()
-```
+pymodins.run()```
+
 ```Python
 # Install Basic Modules
 pymodins.install_basic_modules()```
