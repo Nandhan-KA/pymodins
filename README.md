@@ -29,7 +29,7 @@
 ## 🚀 Installation
 
 ```bash
-git clone https://gihub.com/Nandhan-KA/pymodins.git
+git clone https://github.com/Nandhan-KA/pymodins.git
 
 cd pymodins 
 
