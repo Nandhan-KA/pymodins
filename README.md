@@ -28,11 +28,18 @@
 
 ## 🚀 Installation
 
+```bash
+git clone https://gihub.com/Nandhan-KA/pymodins.git
+
+cd pymodins 
+
+python setup.py Install 
+```
+
+
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to Install pymodins.
 
 ```bash
-python setup.py Install 
-        or
 pip Install pymodins
 ```
 
