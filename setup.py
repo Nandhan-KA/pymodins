@@ -38,20 +38,15 @@ if platform.system() == "Windows":
             "Operating System :: Microsoft :: Windows",
             "Environment :: Win32 (MS Windows)",
             'Programming Language :: Python',
-            'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.1',
-            'Programming Language :: Python :: 3.2',
-            'Programming Language :: Python :: 3.3',
-            'Programming Language :: Python :: 3.4',
-            'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
             'Programming Language :: Python :: 3.8',
             'Programming Language :: Python :: 3.9',
             'Programming Language :: Python :: 3.10',
             'Programming Language :: Python :: 3.11',
+            'Programming Language :: Python :: 3.12'
         ],
-        python_requires='>=3.6',
+        python_requires='>=3.6 ',
         platforms=["win32"],  
     )
 else:

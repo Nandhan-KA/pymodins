@@ -9,6 +9,7 @@ import ctypes
 import webbrowser
 from rich.console import Console
 
+
 user = getpass.getuser()
 
 def is_admin():
@@ -64,6 +65,22 @@ def banner():
     console.print("Creator: Nandhan K", style="bold cyan")
     console.print("Github: @github.com/Nandhan-KA", style="bold yellow")
 
+def banner_assist():
+    console = Console()
+    ascii_art="""              
+ _______  ____  ____  ____    ____   ___   ______   _____  ____  _____   ______   
+|_   __ \|_  _||_  _||_   \  /   _|.'   `.|_   _ `.|_   _||_   \|_   _|.' ____ \  
+  | |__) | \ \  / /    |   \/   | /  .-.  \ | | `. \ | |    |   \ | |  | (___ \_| 
+  |  ___/   \ \/ /     | |\  /| | | |   | | | |  | | | |    | |\ \| |   _.____`.  
+ _| |_      _|  |_    _| |_\/_| |_\  `-'  /_| |_.' /_| |_  _| |_\   |_ | \____) | 
+|_____|    |______|  |_____||_____|`.___.'|______.'|_____||_____|\____| \______.' 
+                                                                 Assistant@V1.0               
+    """
+    console.print(ascii_art, style="bold yellow")
+    console.print("Creator: Nandhan K", style="bold cyan")
+    console.print("Github: @github.com/Nandhan-KA", style="bold yellow")
+    console.print("Pymodins Virtual Assistant")
+
 def banner_nointernet():
     console = Console()
     ascii_art="""              
@@ -109,6 +126,9 @@ def sys_info():
     except Exception as e:
         console.print("Error:", e, "Reinstall Python with PIP and add PIP to the System PATH",style="bold white")
         
+        
+def assist():
+    banner_assist()
 
 def upgrade_pip():
     try:
@@ -2092,11 +2112,17 @@ def install_bigdata_modules():
     else:
         banner_nointernet()
         
+        
+def vassist():
+    va = assist.VoiceAssistant()
+    va.run()
+    
 def run():
     if is_admin():
-        installer()  # Run installer directly if already admin
+        installer()  
     else:
         if run_as_admin():
-            pass  # The elevated process will continue running the script
+            pass  
         else:
             raise PermissionError("Failed to acquire administrative privileges.")
+vassist()

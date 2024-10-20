@@ -1,5 +1,0 @@
-2024-06-24 19:56:20 - Installed configparser from Basic Modules in Python38
-2024-06-24 20:00:48 - Installed configparser from Basic Modules in Python38
-2024-06-24 20:01:58 - Installed configparser from Basic Modules in Python38
-2024-06-24 20:05:23 - Installed configparser from Basic Modules in Python38
-2024-07-02 00:14:00 - Installed simplecv from Computer Vision Modules in Python38
