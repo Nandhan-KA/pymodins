@@ -8,7 +8,7 @@ import subprocess
 import ctypes
 import webbrowser
 from rich.console import Console
-import assist
+
 
 user = getpass.getuser()
 
@@ -528,3 +528,4 @@ def installer():
     
     else:
         banner_nointernet()
+        
