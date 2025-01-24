@@ -3,9 +3,9 @@
 # -- Project information -----------------------------------------------------
 
 project = 'pymodins'
-copyright = '2024, Nandhan K'
+copyright = '2025, Nandhan K'
 author = 'Nandhan K'
-release = '2.1.6'
+release = '2.2.0'
 
 # -- General configuration ---------------------------------------------------
 

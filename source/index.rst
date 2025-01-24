@@ -4,8 +4,12 @@ Welcome to pymodins's documentation!
 =====================================
 
 Pymodins is more than just a tool for installing Python modules. It’s a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly install modules tailored to their specific needs, whether it’s basic modules for general programming tasks or advanced modules for specialized applications.
+This tool can be used in Windows as well as Linux based Operating System.
 
-To install with pip, run ``pip install pymodins``
+To install with pip, 
+run ``pip install pymodins`` in Windows
+run ``sudo pip3 install pymodins`` in Linux
+
 
 The source code is available on: https://github.com/Nandhan-ka/pymodins
 
@@ -21,7 +25,7 @@ pymodins has several features:
 Examples
 ========
 
-User can directly run by typing ``pymodins`` in Administrator command prompt
+User can directly run by typing ``pymodins`` in Administrator command prompt and also in terminal
 
 
 .. code:: python
@@ -35,25 +39,6 @@ User can directly run by typing ``pymodins`` in Administrator command prompt
 
    >>> pymodins.install_basic_modules()
 .. image:: basic_modules.png
-
-Like wise user can able to directly install modules of many fields:
-
-   >>> pymodins.install_advanced_modules()
-   >>> pymodins.install_science_modules()
-   >>> pymodins.install_computervision_modules()
-   >>> pymodins.install_machinelearning_modules()
-   >>> pymodins.install_deeplearning_modules()
-   >>> pymodins.install_fullstack_modules()
-   >>> pymodins.install_network_modules()
-   >>> pymodins.install_build_modules()
-   >>> pymodins.install_jupyter_modules()
-   >>> pymodins.install_data_visualization_modules()
-   >>> pymodins.install_database_modules()
-   >>> pymodins.install_CyberSecurity_modules()
-   >>> pymodins.install_cloudcomputing_modules()
-   >>> pymodins.install_devops_modules()
-   >>> pymodins.install_bigdata_modules()
-
 
 .. toctree::
    :maxdepth: 2
