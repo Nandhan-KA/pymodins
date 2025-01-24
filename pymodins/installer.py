@@ -62,8 +62,9 @@ def banner():
                                                                  v2.2.0               
     """
     console.print(ascii_art, style="bold yellow")
-    console.print("Creator: Nandhan K", style="bold cyan")
-    console.print("Github: @github.com/Nandhan-KA", style="bold yellow")
+    console.print("\t Creator: Nandhan K", style="bold cyan")
+    console.print("\t Github: @github.com/Nandhan-KA", style="bold yellow")
+    console.print("\t For more info contact: developer.nandhank@gmail.com", style="bold green")
 
 def banner_assist():
     console = Console()
@@ -95,6 +96,7 @@ def banner_nointernet():
     console.print(ascii_art, style="bold yellow")
     console.print("\t Creator: Nandhan K", style="bold cyan")
     console.print("\t Github: @github.com/Nandhan-KA", style="bold yellow")
+    console.print("\t For more info contact: developer.nandhank@gmail.com", style="bold green")
     console.print(" \n \t This Project Requires Internet Connection 🌐 ", style="bold yellow")
 
 def creator():
@@ -111,6 +113,7 @@ def creator():
     console.print(ascii_art, style="bold yellow")
     console.print("\t Creator: Nandhan K", style="bold cyan")
     console.print("\t Github: @github.com/Nandhan-KA", style="bold yellow")
+    console.print("\t For more info contact: developer.nandhank@gmail.com", style="bold green")
 
 def sys_info():
     console = Console()
@@ -2120,4 +2123,4 @@ def run():
             pass  
         else:
             raise PermissionError("Failed to acquire administrative privileges.")
-        
+ 
