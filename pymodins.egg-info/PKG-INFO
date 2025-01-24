@@ -1,119 +1,178 @@
 Metadata-Version: 2.1
 Name: pymodins
-Version: 2.1.6
-Summary: Pymodins is more than just a tool for installing Python modules. It's a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly install modules tailored to their specific needs, whether it's basic modules for general programming tasks or advanced modules for specialized applications.
+Version: 2.1.7
+Summary: A Python module installer for newcomers and seasoned developers.
 Home-page: https://github.com/Nandhan-KA/pymodins
 Author: Nandhan K
-Author-email: nandhan2003alamelu@gmail.com
-Keywords: Python Module Installer,Python Package Installer,python modules installer,python package installer,Nandhan-KA,PYMODINS,pymodins,Nandhan K,Nandhan
+Author-email: developer.nandhank@gmail.com
+Keywords: Python Module Installer,Python Package Installer,pymodins,Nandhan K
 Platform: win32
+Platform: linux
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX :: Linux
 Classifier: Environment :: Win32 (MS Windows)
 Classifier: Programming Language :: Python
-Classifier: Programming Language :: Python :: 3
-Classifier: Programming Language :: Python :: 3.1
-Classifier: Programming Language :: Python :: 3.2
-Classifier: Programming Language :: Python :: 3.3
-Classifier: Programming Language :: Python :: 3.4
-Classifier: Programming Language :: Python :: 3.5
 Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: rich
 
+
+![Logo](source/PYMODINS.png)
+
+
 # PYMODINS
 
-[pymodins](https://github.com/Nandhan-KA/pymodins) is more than just a tool for installing Python modules. Itâ€™s a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly install modules tailored to their specific needs, whether itâ€™s basic modules for general programming tasks or advanced modules for specialized applications..
+[pymodins](https://github.com/Nandhan-KA/pymodins) is more than just a tool for installing Python modules. It’s a guiding hand for newcomers, helping them navigate the complex landscape of Python development with ease. With pymodins, developers can quickly and effortlessly Install modules tailored to their specific needs, whether it’s basic modules for general programming tasks or advanced modules for specialized applications..
 
-## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install pymodins.
+## Badges
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+
+
+## ✨ Features
+
+- Easy Installation: Install multiple Python packages with a single command.
+
+- Domain-Specific Packages: Choose from various - domains like Machine Learning, Deep Learning, Data Visualization, and more.
+
+- Beginner Friendly: Simplifies the process of setting up Python environments for beginners.
+
+- Automation: Automates the installation of commonly used Python packages.
+
+- Extensible: Open to contributions and can be extended to include more modules and features.
+
+
+
+## 🚀 Installation
 
 ```bash
-python setup.py install 
-        or
-pip install pymodins
+git clone https://github.com/Nandhan-KA/pymodins.git
+
+cd pymodins 
+
+python setup.py Install 
 ```
 
-## Usage
+
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to Install pymodins.
+
+```bash
+pip Install pymodins
+```
+
+## 💻 Usage
 
 
 Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell
 
   or
 
-```Python 
-
+```bash 
 import pymodins
-
 # Displays all Domains
 pymodins.run()
+```
 
+```bash
 # Install Basic Modules
 pymodins.install_basic_modules()
+```
 
-#install Advanced Modules
+```bash 
+# Install Advanced Modules
 pymodins.install_advanced_modules()
+```
 
-#install Science Modules
+```bash 
+# Install Science Modules
 pymodins.install_science_modules()
+```
 
-#install Computer Vision Modules
+```bash 
+# Install Computer Vision Modules
 pymodins.install_computervision_modules()
+```
 
-#install MachineLearning Modules()
+```bash 
+# Install MachineLearning Modules()
 pymodins.install_machinelearning_modules()
+```
 
-#install Deep Learning Modules
+```bash 
+# Install Deep Learning Modules
 pymodins.install_deeplearning_modules()
+```
 
-#install Full Stack Development Modules
+```bash 
+# Install Full Stack Development Modules
 pymodins.install_fullstack_modules()
+```
 
-#install Network Modules
+```bash 
+# Install Network Modules
 pymodins.install_network_modules()
+```
 
-#install Build Modules
+```bash 
+#Install Build Modules
 pymodins.install_build_modules()
+```
 
-#install Jupyter Modules
+```bash 
+# Install Jupyter Modules
 pymodins.install_jupyter_modules()
+```
 
-#install data visualization modules
+```bash 
+# Install Data visualization modules
 pymodins.install_data_visualization_modules()
+```
 
-#install database modules
+```bash 
+# Install Database modules
 pymodins.install_database_modules()
+```
 
-#install CyberSecurity modules
+```bash 
+# Install CyberSecurity modules
 pymodins.install_CyberSecurity_modules()
+```
 
-#install cloudcomputing modules
+```bash 
+# Install Cloudcomputing modules
 pymodins.install_cloudcomputing_modules()
+```
 
-#install devops modules
+```bash 
+#Install Devops modules
 pymodins.install_devops_modules()
+```
 
-#install bigdata modules
+```bash 
+# Install Bigdata modules
 pymodins.install_bigdata_modules()
 ```
 
-## Contributing
+
+## 🤝 Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
-## License
+## 📜 License
 
 [MIT](https://choosealicense.com/licenses/mit/)
 ```
@@ -140,9 +199,41 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## Expected Output
+## 🎯 Expected Output
 ![pymodins](source/run.png)
 
-# Thank you for using this project!
+
+## 👥 Authors
+
+- [@Nandhan K](https://www.github.com/Nandhan-Ka)
+
+
+## 📜 Documentation
+
+[Documentation](https://pymodins.readthedocs.io/en/latest/)
+
+
+## 💬 Support
+
+For support, email  nandhan2003alamelu@gmail.com 
+
+# 🌈 Thank you for using this project!
+
 # Feel free to ask your queries
+
 # Feel free to Modify
+
+
+
+## FAQ
+
+#### Does this package can able to install packages of various domains?
+
+Answer: Yes
+
+#### Can users remodify this code and use it? 
+
+Answer: Yes
+
+
+

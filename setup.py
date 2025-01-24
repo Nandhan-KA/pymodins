@@ -1,9 +1,13 @@
+# setup.py
 import platform
 from setuptools import setup, find_packages
 
+with open('README.md', encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name="pymodins",
-    version="2.1.7",
+    version="2.2.0",
     packages=find_packages(),
     install_requires=[
         "rich"
@@ -23,7 +27,7 @@ setup(
         "pymodins",
         "Nandhan K",
     ],
-    long_description=open('README.md').read(),
+    long_description=long_description,
     long_description_content_type='text/markdown',
     url="https://github.com/Nandhan-KA/pymodins",
     classifiers=[

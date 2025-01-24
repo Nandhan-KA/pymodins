@@ -2,7 +2,10 @@ LICENSE
 README.md
 setup.py
 pymodins/__init__.py
+pymodins/__main__.py
 pymodins/installer.py
+pymodins/linux.py
+pymodins/testing.py
 pymodins.egg-info/PKG-INFO
 pymodins.egg-info/SOURCES.txt
 pymodins.egg-info/dependency_links.txt
