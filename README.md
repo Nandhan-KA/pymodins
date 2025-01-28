@@ -38,15 +38,19 @@ python setup.py Install
 
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to Install pymodins.
-
+In windows
 ```bash
 pip Install pymodins
+```
+In Linux
+```bash
+sudo pip3 install pymodins
 ```
 
 ## 💻 Usage
 
 
-Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell
+Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell , same in Linux
 
   or
 
@@ -150,7 +154,7 @@ Please make sure to update tests as appropriate.
 ```
                             MIT License
 
-                    Copyright (c) 2024 Nandhan
+                    Copyright (c) 2025 Nandhan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -187,9 +191,9 @@ SOFTWARE.
 
 ## 💬 Support
 
-For support, email  nandhan2003alamelu@gmail.com 
+For support, email  developer.nandhank@gmail.com 
 
-# 🌈 Thank you for using this project!
+# Thank you for using this project!
 
 # Feel free to ask your queries
 
@@ -207,5 +211,8 @@ Answer: Yes
 
 Answer: Yes
 
+#### Does this works on Linux?
+
+Answer Yes
 
 
