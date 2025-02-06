@@ -10,8 +10,6 @@ Welcome to pymodins's Documentation!
 
 This tool can be used on **Windows** as well as **Linux-based Operating Systems**.
 
----
-
 **To install with pip:**  
 - On Windows, run:  
   ```
@@ -22,12 +20,9 @@ This tool can be used on **Windows** as well as **Linux-based Operating Systems*
   sudo pip3 install pymodins
   ```
 
----
-
 **Source Code:**  
 The source code is available on [GitHub](https://github.com/Nandhan-ka/pymodins).
 
----
 
 **Key Features of pymodins:**
 * 🛠️ **Easy Installation:** Install multiple Python modules with a single command.  
@@ -39,7 +34,6 @@ The source code is available on [GitHub](https://github.com/Nandhan-ka/pymodins)
 * 📊 **Performance Insights:** Gain insights into package installation performance.
 * 🛡️ **Security Enhancements:** Secure handling of package installations.
 
----
 
 Getting Started
 ===============
@@ -54,8 +48,6 @@ To begin using **pymodins**, follow these simple steps:
    import pymodins
    pymodins.run()
    ```
-
----
 
 Commands and Usage
 ==================
@@ -93,7 +85,6 @@ Commands and Usage
 
       >>> pymodins.install_data_viz_modules()
 
----
 
 .. toctree::
    :maxdepth: 2
@@ -103,8 +94,6 @@ Commands and Usage
    usage
    advanced_features
    troubleshooting
-
----
 
 Advanced Features
 =================
@@ -125,7 +114,6 @@ Pymodins allows you to install packages based on specific domains such as:
 
 - Comprehensive error messages to guide users.
 
----
 
 Troubleshooting
 ===============
@@ -141,11 +129,9 @@ Troubleshooting
 3. **Version Conflicts:**
    Create a virtual environment to avoid conflicts.
 
----
 
 This documentation is still a **work in progress**. Stay tuned for more updates!
 
----
 
 Indices and Tables
 ==================
