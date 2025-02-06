@@ -11,14 +11,15 @@ extensions = [
     'sphinx_panels',
     'sphinx_tabs.tabs',
     'sphinx_copybutton',
-    'sphinxcontrib.mermaid'
+    'sphinxcontrib.mermaid',
+    'sphinx.ext.graphviz',  # For diagrams (optional)
 ]
 
 templates_path = ['_templates']
 exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
-html_theme = 'alabaster'  # Changed to Alabaster
+html_theme = 'alabaster'  # You mentioned you want the Alabaster theme
 html_static_path = ['_static']
 
 # Favicon and logo settings
@@ -27,15 +28,16 @@ html_favicon = '_static/favicon.ico'  # Add a favicon if available
 
 # Theme-specific options for Alabaster
 html_theme_options = {
-    'description': 'Pymodins ',
-    'github_user': 'Nandhan-KA',  # Optional: GitHub username
-    'github_repo': 'pymodins',  # Optional: GitHub repository name
-    'sidebar_width': '300px',
-    'page_width': '80%',  # Adjust the page width if needed
-    'show_powered_by': False,  # Hide the "powered by" text
-  # You can adjust the logo path
-    'favicon': 'favicon.ico',  # You can adjust the favicon path
+    'description': 'Pymodins: Python Module Installer',
+    'github_user': 'Nandhan-ka',
+    'github_repo': 'pymodins',
+    'show_powered_by': False,
+    'sidebar_width': '250px',
 }
+
+# Add custom static files like JS and CSS
+html_js_files = ['animation.js']
+html_css_files = ['custom.css']
 
 # Code block styling
 pygments_style = 'friendly'

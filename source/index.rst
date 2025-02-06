@@ -1,7 +1,9 @@
+
 .. image:: PYMODINS.png
    :alt: Pymodins Logo
    :align: center
    :width: 200px
+   :data-aos: "fade-up"  # Animation when the image comes into view
 
 Welcome to pymodins's Documentation!
 =====================================
@@ -12,28 +14,26 @@ This tool can be used on **Windows** as well as **Linux-based Operating Systems*
 
 **To install with pip:**  
 - On Windows, run:  
-  ```
+  ```bash
   pip install pymodins
   ```
 - On Linux, run:  
-  ```
+  ```bash
   sudo pip3 install pymodins
   ```
 
 **Source Code:**  
 The source code is available on [GitHub](https://github.com/Nandhan-ka/pymodins).
 
-
 **Key Features of pymodins:**
-* 🛠️ **Easy Installation:** Install multiple Python modules with a single command.  
-* 📚 **Domain-Specific Packages:** Choose from various domains like Machine Learning, Deep Learning, Data Visualization, and more.  
-* 🌱 **Beginner-Friendly:** Simplifies the process of setting up Python environments for beginners.  
-* 🤖 **Automation:** Automates the installation of commonly used Python packages.  
-* 🔧 **Extensible:** Open to contributions and can be extended to include more modules and features.  
+* 🛠️ **Easy Installation:** Install multiple Python modules with a single command.
+* 📚 **Domain-Specific Packages:** Choose from various domains like Machine Learning, Deep Learning, Data Visualization, and more.
+* 🌱 **Beginner-Friendly:** Simplifies the process of setting up Python environments for beginners.
+* 🤖 **Automation:** Automates the installation of commonly used Python packages.
+* 🔧 **Extensible:** Open to contributions and can be extended to include more modules and features.
 * 🚀 **Cross-Platform Support:** Seamlessly works on both Windows and Linux.
 * 📊 **Performance Insights:** Gain insights into package installation performance.
 * 🛡️ **Security Enhancements:** Secure handling of package installations.
-
 
 Getting Started
 ===============
@@ -64,6 +64,7 @@ Commands and Usage
       :alt: Running pymodins
       :align: center
       :width: 60%
+      :data-aos: "fade-in"
 
 2. **Install Basic Modules:**
    .. code:: python
@@ -74,6 +75,7 @@ Commands and Usage
       :alt: Installing Basic Modules
       :align: center
       :width: 60%
+      :data-aos: "fade-in"
 
 3. **Install Machine Learning Modules:**
    .. code:: python
@@ -84,16 +86,6 @@ Commands and Usage
    .. code:: python
 
       >>> pymodins.install_data_viz_modules()
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   installation
-   usage
-   advanced_features
-   troubleshooting
 
 Advanced Features
 =================
@@ -114,7 +106,6 @@ Pymodins allows you to install packages based on specific domains such as:
 
 - Comprehensive error messages to guide users.
 
-
 Troubleshooting
 ===============
 
@@ -129,12 +120,9 @@ Troubleshooting
 3. **Version Conflicts:**
    Create a virtual environment to avoid conflicts.
 
-
 This documentation is still a **work in progress**. Stay tuned for more updates!
-
 
 Indices and Tables
 ==================
 
 * :ref:`genindex`
-
