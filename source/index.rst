@@ -20,11 +20,11 @@ This tool can be used on **Windows** as well as **Linux-based Operating Systems*
 
 **To install with pip:**  
 - On Windows, run:  
-  ```bash
+  ```
   pip install pymodins
   ```
 - On Linux, run:  
-  ```bash
+  ```
   sudo pip3 install pymodins
   ```
 
@@ -32,6 +32,7 @@ This tool can be used on **Windows** as well as **Linux-based Operating Systems*
 The source code is available on [GitHub](https://github.com/Nandhan-ka/pymodins).
 
 **Key Features of pymodins:**
+
 - 🛠️ **Easy Installation:** Install multiple Python modules with a single command.
 - 📚 **Domain-Specific Packages:** Choose from various domains like Machine Learning, Deep Learning, Data Visualization, and more.
 - 🌱 **Beginner-Friendly:** Simplifies the process of setting up Python environments for beginners.
