@@ -9,7 +9,15 @@ release = '2.2.0'
 
 # -- General configuration ---------------------------------------------------
 
-extensions = []
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx_panels',
+    'sphinx_tabs.tabs',
+    'sphinx_hoverxref',
+    'sphinx_copybutton',
+    'sphinxcontrib.mermaid'
+]
+
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -17,7 +25,8 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
+html_static_path = ['_static']  
+html_css_files = ['custom.css']
 
 # Path to the logo image
 html_logo = '_static/Logo.png'  # Ensure the logo image is in the source/_static directory
