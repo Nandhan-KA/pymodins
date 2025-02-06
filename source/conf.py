@@ -18,19 +18,23 @@ templates_path = ['_templates']
 exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
-html_theme = 'furo'
+html_theme = 'alabaster'  # Changed to Alabaster
 html_static_path = ['_static']
 
 # Favicon and logo settings
 html_logo = '_static/Logo.png'  # Ensure the logo image is present here
 html_favicon = '_static/favicon.ico'  # Add a favicon if available
 
-# Theme-specific options for Furo
+# Theme-specific options for Alabaster
 html_theme_options = {
-    "light_logo": "Logo.png",
-    "dark_logo": "Logo.png",
-    "sidebar_hide_name": True,
-    "navigation_with_keys": True,
+    'description': 'Pymodins ',
+    'github_user': 'Nandhan-KA',  # Optional: GitHub username
+    'github_repo': 'pymodins',  # Optional: GitHub repository name
+    'sidebar_width': '300px',
+    'page_width': '80%',  # Adjust the page width if needed
+    'show_powered_by': False,  # Hide the "powered by" text
+    'logo': 'Logo.png',  # You can adjust the logo path
+    'favicon': 'favicon.ico',  # You can adjust the favicon path
 }
 
 # Code block styling
