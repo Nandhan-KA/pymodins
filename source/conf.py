@@ -13,7 +13,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx_panels',
     'sphinx_tabs.tabs',
-    'sphinx_hoverxref',
     'sphinx_copybutton',
     'sphinxcontrib.mermaid'
 ]
