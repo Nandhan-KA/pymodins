@@ -1,14 +1,11 @@
 # Configuration file for the Sphinx documentation builder.
-
 # -- Project information -----------------------------------------------------
-
 project = 'pymodins'
 copyright = '2025, Nandhan K'
 author = 'Nandhan K'
 release = '2.2.0'
 
 # -- General configuration ---------------------------------------------------
-
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx_panels',
@@ -17,17 +14,28 @@ extensions = [
     'sphinxcontrib.mermaid'
 ]
 
-
 templates_path = ['_templates']
 exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
+html_theme = 'furo'
+html_static_path = ['_static']
 
-html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']  
+# Favicon and logo settings
+html_logo = '_static/Logo.png'  # Ensure the logo image is present here
+html_favicon = '_static/favicon.ico'  # Add a favicon if available
 
-# Path to the logo image
-html_logo = '_static/Logo.png'  # Ensure the logo image is in the source/_static directory
+# Theme-specific options for Furo
+html_theme_options = {
+    "light_logo": "Logo.png",
+    "dark_logo": "Logo.png",
+    "sidebar_hide_name": True,
+    "navigation_with_keys": True,
+}
+
+# Code block styling
+pygments_style = 'friendly'
+pygments_dark_style = 'native'
 
 html_context = {
     'google_site_verification': 'w6WcqTlHnT1hyck_miLc4L2PWN7i6p2xa78lEK65cME',
