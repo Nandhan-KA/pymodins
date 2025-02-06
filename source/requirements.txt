@@ -1,2 +1,7 @@
 sphinx
 sphinx-rtd-theme
+sphinx-panels 
+sphinx-tabs 
+sphinx-hoverxref 
+sphinx-copybutton 
+sphinxcontrib-mermaid

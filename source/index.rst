@@ -34,48 +34,112 @@ The source code is available on [GitHub](https://github.com/Nandhan-ka/pymodins)
 * 📚 **Domain-Specific Packages:** Choose from various domains like Machine Learning, Deep Learning, Data Visualization, and more.  
 * 🌱 **Beginner-Friendly:** Simplifies the process of setting up Python environments for beginners.  
 * 🤖 **Automation:** Automates the installation of commonly used Python packages.  
-* 🔧 **Extensible:** Open to contributions and can be extended to include more modules and features.
+* 🔧 **Extensible:** Open to contributions and can be extended to include more modules and features.  
+* 🚀 **Cross-Platform Support:** Seamlessly works on both Windows and Linux.
+* 📊 **Performance Insights:** Gain insights into package installation performance.
+* 🛡️ **Security Enhancements:** Secure handling of package installations.
 
 ---
 
-Examples
-========
+Getting Started
+===============
 
-**Run directly from the command line:**  
-- **Administrator Command Prompt (Windows)**  
-- **Terminal (Linux)**
+To begin using **pymodins**, follow these simple steps:
 
-**Sample Commands and Screenshots:**
+1. Install pymodins using pip.
+2. Open your command prompt (Administrator mode) or terminal.
+3. Run the following command:
 
-Running pymodins
------------------
-.. code:: python
-
-   >>> import pymodins
-   >>> pymodins.run()
-
-.. image:: run.png
-   :alt: Running pymodins
-   :align: center
-   :width: 60%
+   ```python
+   import pymodins
+   pymodins.run()
+   ```
 
 ---
 
-Installing Basic Modules
--------------------------
-.. code:: python
+Commands and Usage
+==================
 
-   >>> pymodins.install_basic_modules()
+**Basic Commands:**
 
-.. image:: basic_modules.png
-   :alt: Installing Basic Modules
-   :align: center
-   :width: 60%
+1. **Run pymodins:**
+   .. code:: python
+
+      >>> import pymodins
+      >>> pymodins.run()
+
+   .. image:: run.png
+      :alt: Running pymodins
+      :align: center
+      :width: 60%
+
+2. **Install Basic Modules:**
+   .. code:: python
+
+      >>> pymodins.install_basic_modules()
+
+   .. image:: basic_modules.png
+      :alt: Installing Basic Modules
+      :align: center
+      :width: 60%
+
+3. **Install Machine Learning Modules:**
+   .. code:: python
+
+      >>> pymodins.install_ml_modules()
+
+4. **Install Data Visualization Modules:**
+   .. code:: python
+
+      >>> pymodins.install_data_viz_modules()
 
 ---
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
+
+   installation
+   usage
+   advanced_features
+   troubleshooting
+
+---
+
+Advanced Features
+=================
+
+**Domain-Specific Package Installation:**
+
+Pymodins allows you to install packages based on specific domains such as:
+
+- **Machine Learning:** TensorFlow, Scikit-Learn, etc.
+- **Data Visualization:** Matplotlib, Seaborn, Plotly.
+- **Web Development:** Flask, Django.
+
+**Customization:**
+
+- Modify the configuration file to add your custom package lists.
+
+**Error Handling:**
+
+- Comprehensive error messages to guide users.
+
+---
+
+Troubleshooting
+===============
+
+**Common Issues and Solutions:**
+
+1. **Permission Denied:**
+   Ensure you are running the command prompt as an administrator or use `sudo` on Linux.
+
+2. **Package Not Found:**
+   Verify your internet connection and package name.
+
+3. **Version Conflicts:**
+   Create a virtual environment to avoid conflicts.
 
 ---
 
