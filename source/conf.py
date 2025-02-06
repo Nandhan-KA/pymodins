@@ -33,7 +33,7 @@ html_theme_options = {
     'sidebar_width': '300px',
     'page_width': '80%',  # Adjust the page width if needed
     'show_powered_by': False,  # Hide the "powered by" text
-    'logo': 'Logo.png',  # You can adjust the logo path
+  # You can adjust the logo path
     'favicon': 'favicon.ico',  # You can adjust the favicon path
 }
 
