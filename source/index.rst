@@ -8,22 +8,23 @@ Welcome to pymodins's Documentation!
 =====================================
 
 **Pymodins** is more than just a tool for installing Python modules. 
-It’s a guiding hand for newcomers, helping them navigate the complex
+It's a guiding hand for newcomers, helping them navigate the complex
 landscape of Python development with ease. 
  
 With **pymodins**, developers  can  quickly and effortlessly install 
-modules tailored to their specific needs, whether it’s basic modules 
+modules tailored to their specific needs, whether it's basic modules 
 for general programming tasks or advanced modules for specialized applications.
 
 This tool can be used on **Windows** as well as **Linux-based Operating Systems**.
 
 **To install with pip:**  
 - On Windows, run:  
-  ```
+  ```python
   pip install pymodins
   ```
+
 - On Linux, run:  
-  ```
+  ```python
   sudo pip3 install pymodins
   ```
 
@@ -66,10 +67,10 @@ To begin using **pymodins**, follow these simple steps:
    ```python
    pymodins
    ```
-.. image:: run.png
-   :alt: Running pymodins
-   :align: center
-   :width: 60%
+   .. image:: run.png
+      :alt: Running pymodins
+      :align: center
+      :width: 60%
  
 Commands and Usage
 ==================
