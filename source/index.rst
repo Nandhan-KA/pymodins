@@ -3,7 +3,6 @@
    :alt: Pymodins Logo
    :align: center
    :width: 200px
-   :data-aos: "fade-up"  # Animation when the image comes into view
 
 Welcome to pymodins's Documentation!
 =====================================
@@ -67,12 +66,11 @@ To begin using **pymodins**, follow these simple steps:
    ```python
    pymodins
    ```
-   .. image:: _static/image/run.png
-      :alt: Running pymodins
-      :align: center
-      :width: 60%
-      :data-aos: "fade-in"
-
+.. image:: _static/image/run.png
+   :alt: Running pymodins
+   :align: center
+   :width: 60%
+ 
 Commands and Usage
 ==================
 
@@ -88,7 +86,6 @@ Commands and Usage
       :alt: Running pymodins
       :align: center
       :width: 60%
-      :data-aos: "fade-in"
 
 2. **Install Basic Modules:**
    .. code:: python
@@ -99,7 +96,6 @@ Commands and Usage
       :alt: Installing Basic Modules
       :align: center
       :width: 60%
-      :data-aos: "fade-in"
 
 3. **Install Machine Learning Modules:**
    .. code:: python
