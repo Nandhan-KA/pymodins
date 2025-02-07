@@ -1,99 +1,109 @@
-/* Alabaster Theme Enhancements */
-
-/* Headers Styling */
-h1 {
+/* Global Styling */
+body {
+  display: flex;
+  background-color: #f9f9f9;
   font-family: 'Roboto', sans-serif;
-  color: #D35400;
-  text-align: center;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  margin-bottom: 15px;
 }
 
-h2 {
-  font-family: 'Open Sans', sans-serif;
-  color: #2874A6;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-p {
-  font-size: 1.1rem;
-  line-height: 1.7;
-  color: #2C3E50;
-  text-align: justify;
-}
-
-/* Sidebar Panel Enhancements */
+/* Sidebar Styling */
 .sphinxsidebar {
+  flex: 0 0 250px;
+  margin-right: 20px;
   background: linear-gradient(180deg, #EBF5FB, #D6EAF8);
   border-right: 3px solid #AED6F1;
   padding: 15px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.sphinxsidebar a {
-  color: #2E86C1;
+.sphinxsidebar .sphinxsidebarwrapper {
+  position: relative;
 }
 
-.sphinxsidebar a:hover {
-  color: #E74C3C;
-  text-decoration: underline;
+/* Ensure the logo remains visible */
+.sphinxsidebar img {
+  display: block !important;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 15px;
 }
 
-/* Highlight Code Blocks */
-pre {
-  background: #FBFCFC;
-  padding: 12px;
-  border-radius: 6px;
-  border-left: 4px solid #5DADE2;
-  font-size: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Navigation Panel */
+.sphinxsidebar ul {
+  padding-left: 20px;
 }
 
-/* Table Styling */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: linear-gradient(135deg, #F9EBEA, #D6DBDF);
-  margin: 15px 0;
+.sphinxsidebar li {
+  margin: 10px 0;
 }
 
-th, td {
-  border: 2px solid #E5E7E9;
-  padding: 10px;
-  text-align: center;
-}
-
-th {
-  background-color: #85C1E9;
-  color: white;
-  text-transform: uppercase;
-}
-
-/* Images Styling */
-img {
+/* Main Content Styling */
+body .body {
+  margin-left: 20px;
+  flex: 1;
+  background: #ffffff;
+  padding: 25px;
   border-radius: 8px;
-  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
-img:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.2);
+/* Typography */
+h1 {
+  color: #D35400;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Floating Action Button */
-.fab-button {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  padding: 15px;
-  background: linear-gradient(135deg, #FF5733, #FFC300);
+h2 {
+  color: #2980B9;
+  margin-top: 25px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+p {
+  line-height: 1.6;
+}
+
+/* Code Blocks */
+.highlight pre {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Buttons */
+button {
+  background-color: #2980B9;
   color: white;
-  border-radius: 50%;
-  font-size: 24px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.fab-button:hover {
-  background: linear-gradient(135deg, #E74C3C, #F1C40F);
+button:hover {
+  background-color: #1F618D;
+}
+
+/* Footer Styling */
+footer {
+  margin-top: 40px;
+  padding: 10px;
+  text-align: center;
+  background: #D6EAF8;
+  border-top: 3px solid #AED6F1;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .sphinxsidebar {
+      flex: 1 0 100%;
+      margin-right: 0;
+      border-right: none;
+      border-bottom: 3px solid #AED6F1;
+  }
+
+  body .body {
+      margin-left: 0;
+  }
 }
