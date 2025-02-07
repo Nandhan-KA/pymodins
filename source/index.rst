@@ -1,5 +1,5 @@
 
-.. image:: PYMODINS.png
+.. image:: _static/image/PYMODINS.png
    :alt: Pymodins Logo
    :align: center
    :width: 200px
@@ -62,25 +62,29 @@ To begin using **pymodins**, follow these simple steps:
 
 1. Install pymodins using pip.
 2. Open your command prompt (Administrator mode) or terminal.
-3. Run the following command:
+3. Run the following command in the command prompt or terminal:
 
    ```python
-   import pymodins
-   pymodins.run()
+   pymodins
    ```
+   .. image:: _static/image/run.png
+      :alt: Running pymodins
+      :align: center
+      :width: 60%
+      :data-aos: "fade-in"
 
 Commands and Usage
 ==================
 
-**Basic Commands:**
+**Basic Commands (if you want to install packages directly by your program):**
 
 1. **Run pymodins:**
    .. code:: python
 
       >>> import pymodins
-      >>> pymodins.run()
+      >>> pymodins.run() # Run the pymodins tool and it will guide you through the installation process.
 
-   .. image:: run.png
+   .. image:: _static/image/run.png
       :alt: Running pymodins
       :align: center
       :width: 60%
@@ -91,7 +95,7 @@ Commands and Usage
 
       >>> pymodins.install_basic_modules()
 
-   .. image:: basic_modules.png
+   .. image:: _static/image/basic_modules.png
       :alt: Installing Basic Modules
       :align: center
       :width: 60%
