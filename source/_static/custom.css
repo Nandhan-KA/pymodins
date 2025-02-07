@@ -1,94 +1,99 @@
-/* General Styling for Headers */
+/* Alabaster Theme Enhancements */
+
+/* Headers Styling */
 h1 {
-    font-family: 'Roboto', sans-serif;
-    color: #004085;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    font-family: 'Open Sans', sans-serif;
-    color: #0056b3;
-  }
-  
-  p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #333;
-  }
-  
-  /* Highlight Code Blocks */
-  pre {
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 8px;
-    border-left: 5px solid #007bff;
-    font-size: 1rem;
-  }
-  
-  /* Table Styling */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  
-  th {
-    background-color: #007bff;
-    color: white;
-    text-align: center;
-  }
-  
-  /* Images Styling */
-  img {
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Custom Panels */
-  .panel {
-    padding: 15px;
-    background-color: #e9ecef;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    margin: 10px 0;
-  }
-  
-  /* Animations */
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  .animated-text {
-    animation: fadeIn 2s ease-in;
-  }
-  
-  img {
-    transition: transform 0.5s ease, box-shadow 0.5s ease;
+  font-family: 'Roboto', sans-serif;
+  color: #D35400;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+h2 {
+  font-family: 'Open Sans', sans-serif;
+  color: #2874A6;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #2C3E50;
+  text-align: justify;
+}
+
+/* Sidebar Panel Enhancements */
+.sphinxsidebar {
+  background: linear-gradient(180deg, #EBF5FB, #D6EAF8);
+  border-right: 3px solid #AED6F1;
+  padding: 15px;
+}
+
+.sphinxsidebar a {
+  color: #2E86C1;
+}
+
+.sphinxsidebar a:hover {
+  color: #E74C3C;
+  text-decoration: underline;
+}
+
+/* Highlight Code Blocks */
+pre {
+  background: #FBFCFC;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 4px solid #5DADE2;
+  font-size: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: linear-gradient(135deg, #F9EBEA, #D6DBDF);
+  margin: 15px 0;
+}
+
+th, td {
+  border: 2px solid #E5E7E9;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #85C1E9;
+  color: white;
+  text-transform: uppercase;
+}
+
+/* Images Styling */
+img {
+  border-radius: 8px;
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
 img:hover {
-    transform: scale(1.1);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+  box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.2);
 }
 
+/* Floating Action Button */
 .fab-button {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    padding: 10px 15px;
-    background-color: #f60;
-    color: white;
-    border-radius: 50%;
-    font-size: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 15px;
+  background: linear-gradient(135deg, #FF5733, #FFC300);
+  color: white;
+  border-radius: 50%;
+  font-size: 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }
 
 .fab-button:hover {
-    background-color: #d95;
+  background: linear-gradient(135deg, #E74C3C, #F1C40F);
 }

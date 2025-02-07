@@ -34,13 +34,26 @@ The source code is available on [GitHub](https://github.com/Nandhan-ka/pymodins)
 **Key Features of pymodins:**
 
 - 🛠️ **Easy Installation:** Install multiple Python modules with a single command.
+  
 - 📚 **Domain-Specific Packages:** Choose from various domains like Machine Learning, Deep Learning, Data Visualization, and more.
+
 - 🌱 **Beginner-Friendly:** Simplifies the process of setting up Python environments for beginners.
+
 - 🤖 **Automation:** Automates the installation of commonly used Python packages.
+
 - 🔧 **Extensible:** Open to contributions and can be extended to include more modules and features.
+
 - 🚀 **Cross-Platform Support:** Seamlessly works on both Windows and Linux.
+
 - 📊 **Performance Insights:** Gain insights into package installation performance.
+
 - 🛡️ **Security Enhancements:** Secure handling of package installations.
+
+- 📜 **Comprehensive Documentation:** Detailed documentation to guide users.
+
+- 📦 **Package Management:** Manage and install packages with ease.
+
+- 📈 **Error Handling:** Provides detailed error messages to help users troubleshoot issues.
 
 Getting Started
 ===============
