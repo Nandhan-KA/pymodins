@@ -8,6 +8,7 @@ Welcome to pymodins's Documentation!
 =====================================
 
 **Pymodins** is more than just a tool for installing Python modules. 
+
 It's a guiding hand for newcomers, helping them navigate the complex
 landscape of Python development with ease. 
  
@@ -64,13 +65,13 @@ To begin using **pymodins**, follow these simple steps:
 2. Open your command prompt (Administrator mode) or terminal.
 3. Run the following command in the command prompt or terminal:
 
-   ```python
-   pymodins
-   ```
-   .. image:: run.png
-      :alt: Running pymodins
-      :align: center
-      :width: 60%
+```python
+pymodins
+```
+.. image:: run.png
+   :alt: Running pymodins
+   :align: center
+   :width: 60%
  
 Commands and Usage
 ==================
@@ -78,6 +79,7 @@ Commands and Usage
 **Basic Commands (if you want to install packages directly by your program):**
 
 1. **Run pymodins:**
+   
    .. code:: python
 
       >>> import pymodins

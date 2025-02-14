@@ -1,5 +1,5 @@
 
-![Logo](source/PYMODINS.png)
+![Logo](https://drive.google.com/file/d/17tEHbis_SCBiKUNqOauYSwXmKZYiRHbs/view?usp=sharing)
 
 
 # PYMODINS
@@ -9,8 +9,8 @@
 
 ## Badges
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)  [![PyPI](https://img.shields.io/pypi/v/pymodins?color=blue&label=PyPI&logo=python)](https://pypi.org/project/pymodins/) [![Python](https://img.shields.io/badge/Python-3.6%2B-blue?logo=python)](https://www.python.org/) [![Git](https://img.shields.io/badge/Git-Repository-orange?logo=git)](https://git-scm.com/) [![GitHub](https://img.shields.io/badge/GitHub-Project-black?logo=github)](https://github.com/) [![Windows](https://img.shields.io/badge/Windows-Supported-blue?logo=windows)](https://www.microsoft.com/en-us/windows)
+ [![Linux](https://img.shields.io/badge/Linux-Ubuntu%2FKali-critical?logo=linux)](https://www.linux.org/) [![Read the Docs](https://img.shields.io/readthedocs/pymodins?logo=read-the-docs)](https://pymodins.readthedocs.io/)
 
 ## ✨ Features
 
@@ -33,26 +33,26 @@ git clone https://github.com/Nandhan-KA/pymodins.git
 
 cd pymodins 
 
-python setup.py Install 
+python3 setup.py install 
 ```
 
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to Install pymodins.
-In windows
+
+#### For windows
 ```bash
-pip Install pymodins
+pip install pymodins
 ```
-In Linux
+#### For Linux
 ```bash
 sudo pip3 install pymodins
 ```
 
 ## 💻 Usage
 
-
 Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell , same in Linux
 
-  or
+  or in Python terminal with Admin priviledges
 
 ```bash 
 import pymodins
@@ -143,8 +143,7 @@ pymodins.install_bigdata_modules()
 
 ## 🤝 Contributing
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
@@ -193,25 +192,25 @@ SOFTWARE.
 
 For support, email  developer.nandhank@gmail.com 
 
-# Thank you for using this project!
+Thank you for using this project!
 
-# Feel free to ask your queries
+Feel free to ask your queries
 
-# Feel free to Modify
+Feel free to Modify
 
 
 
-## FAQ
+## 💬 FAQ
 
-#### Does this package can able to install packages of various domains?
-
-Answer: Yes
-
-#### Can users remodify this code and use it? 
+#### 1. Does this package can able to install packages of various domains?
 
 Answer: Yes
 
-#### Does this works on Linux?
+#### 2. Can users remodify this code and use it? 
+
+Answer: Yes
+
+#### 3. Does this works on Linux?
 
 Answer Yes
 
