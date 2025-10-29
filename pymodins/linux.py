@@ -135,11 +135,11 @@ def install_package(package_name):
         
 basic_modules_linux = [
     'numpy', 'pandas', 'matplotlib', 'scipy', 'requests', 'beautifulsoup4', 'seaborn', 'tqdm', 
-    'docutils', 'pyyaml', 'python-dotenv', 'pillow', 'datetime', 'statistics', 'configparser'
+    'docutils', 'pyyaml', 'python-dotenv', 'pillow'
 ]
 
 advanced_modules_linux = [
-    'argparse', 'asyncio', 'dataclasses', 'pytz', 'pathlib', 'typing_extensions', 'jsonschema', 'pydantic'
+    'pytz', 'typing_extensions', 'jsonschema', 'pydantic'
 ]
 
 science_modules_linux = [
@@ -172,8 +172,8 @@ full_stack_development_modules_linux = [
 ]
 
 network_modules_linux = [
-    'socket', 'http.client', 'urllib', 'requests', 'socketIO-client', 'websockets', 
-    'http.server', 'flask', 'django', 'ftplib', 'smtplib', 'imaplib', 'poplib', 'telnetlib', 'paramiko', 
+    'requests', 'socketIO-client', 'websockets', 
+    'flask', 'django', 'paramiko', 
     'dnspython', 'pyftpdlib', 'twisted', 'pyngrok', 'scapy', 'netmiko', 'nmap', 'snmp'
 ]
 
@@ -195,13 +195,13 @@ data_visualization_modules_linux = [
 ]
 
 database_modules_linux = [
-    'sqlalchemy', 'pymysql', 'psycopg2', 'sqlite3', 'mongodb', 'pymongo', 'tinydb', 
+    'sqlalchemy', 'pymysql', 'psycopg2', 'mongodb', 'pymongo', 'tinydb', 
     'couchdb', 'redis', 'aioredis', 'aiomysql', 'pony', 'orm', 'dataset', 'datasets', 'peewee'
 ]
 
 cybersecurity_modules_linux = [
     'cryptography', 'pycryptodome', 'paramiko', 'scapy', 'pyshark', 'dnspython', 'impacket', 
-    'requests', 'flask-security', 'django-guardian', 'mitmproxy', 'pyOpenSSL', 'certifi', 'ssl', 
+    'requests', 'flask-security', 'django-guardian', 'mitmproxy', 'pyOpenSSL', 'certifi',
     'python-nmap', 'jinja2', 'pyjwt', 'passlib'
 ]
 
@@ -224,8 +224,8 @@ big_data_modules_linux = [
 
 bug_bounty_and_ethical_hacking_modules_linux = [
     'scapy', 'impacket', 'paramiko', 'requests', 'beautifulsoup4', 'dnspython', 
-    'python-nmap', 'shodan', 'pyshark', 'wappalyzer', 'whois', 'socket', 'pysmb', 'httplib2', 
-    'subprocess', 'ssl', 'certifi', 'pycurl', 'urlparse', 'idna', 'urllib3', 'hashlib', 'cryptography', 
+    'python-nmap', 'shodan', 'pyshark', 'wappalyzer', 'whois', 'pysmb', 'httplib2', 
+    'certifi', 'pycurl', 'idna', 'urllib3', 'cryptography', 
     'pycryptodome', 'pyjwt', 'flask-security', 'django-guardian', 'pyOpenSSL', 'passlib', 'mechanize', 
     'selenium', 'mitmproxy', 'fuzzywuzzy', 'validators', 'recon-ng', 'openpyxl', 'xlrd', 'fping', 
     'traceroute', 'sublist3r', 'arjun', 'nuclei', 'wpscan', 'sqlmap', 'xsstrike', 'fierce', 'masscan', 

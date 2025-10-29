@@ -157,40 +157,93 @@ def install_vscode_build_tools():
         return result.returncode
 
     def install_chocolatey():
+        # Updated official install script location and robust PowerShell invocation
         choco_install_cmd = (
                     'powershell.exe '
-                    '-NoProfile -InputFormat None -ExecutionPolicy Bypass -Command '
-                    '"iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'))" '
-                    '&& SET "PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin"'
+                    '-NoProfile -ExecutionPolicy Bypass -Command '
+                    '"Set-ExecutionPolicy Bypass -Scope Process -Force; '
+                    '[System.Net.ServicePointManager]::SecurityProtocol = '
+                    '[System.Net.ServicePointManager]::SecurityProtocol -bor 3072; '
+                    'iex ((New-Object System.Net.WebClient).DownloadString(\'https://community.chocolatey.org/install.ps1\'))"'
                 )
-
         return run_command(choco_install_cmd)
 
-    def install_vs_build_tools():
-        vs_build_tools_cmd = 'choco install -y visualstudio2019buildtools'
-        return run_command(vs_build_tools_cmd)
-
-    try:
-        is_admin = os.getuid() == 0
-    except AttributeError:
-        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-
-    if not is_admin:
-        print("This script requires administrator privileges. Please run as an administrator.")
-        return False
-
-    choco_installed = subprocess.run("choco -v", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if choco_installed.returncode != 0:
-        if install_chocolatey() != 0:
-            print("Failed to install Chocolatey.")
+    def choco_installed():
+        try:
+            result = subprocess.run("choco -v", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            return result.returncode == 0
+        except Exception:
             return False
 
-    if install_vs_build_tools() != 0:
-        print("Failed to install Visual Studio Build Tools.")
+    def ensure_chocolatey():
+        if not choco_installed():
+            if install_chocolatey() != 0:
+                print("Failed to install Chocolatey.")
+                return False
+        # Try to upgrade Chocolatey to avoid stale install issues
+        subprocess.run("choco upgrade chocolatey -y", shell=True)
+        return True
+
+    def vs_build_tools_installed():
+        # Check via choco local packages; supports both 2019 and 2022
+        check_cmd = 'choco list --local-only --exact visualstudio2022buildtools'
+        if subprocess.run(check_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode == 0:
+            out = subprocess.check_output(check_cmd, shell=True).decode(errors='ignore').lower()
+            if 'visualstudio2022buildtools' in out:
+                return True
+        check_cmd19 = 'choco list --local-only --exact visualstudio2019buildtools'
+        try:
+            out19 = subprocess.check_output(check_cmd19, shell=True).decode(errors='ignore').lower()
+            if 'visualstudio2019buildtools' in out19:
+                return True
+        except Exception:
+            pass
         return False
 
-    print("Installation of Visual Studio Build Tools completed successfully.")
-    return True
+    def install_vs_build_tools():
+        # Prefer 2022 Build Tools with VC tools workload and recommended components
+        vs_build_tools_cmd = (
+            'choco install -y visualstudio2022buildtools '
+            '--package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --includeOptional" '
+            '--timeout 0'
+        )
+        rc = run_command(vs_build_tools_cmd)
+        if rc != 0:
+            # Fallback to 2019 build tools if 2022 fails (older systems)
+            vs_build_tools_cmd_2019 = (
+                'choco install -y visualstudio2019buildtools '
+                '--package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --includeOptional" '
+                '--timeout 0'
+            )
+            return run_command(vs_build_tools_cmd_2019)
+        return rc
+
+    try:
+        try:
+            is_admin = os.getuid() == 0
+        except AttributeError:
+            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+
+        if not is_admin:
+            print("This script requires administrator privileges. Please run as an administrator.")
+            return False
+
+        if not ensure_chocolatey():
+            return False
+
+        if vs_build_tools_installed():
+            print("Visual Studio Build Tools already installed.")
+            return True
+
+        if install_vs_build_tools() != 0:
+            print("Failed to install Visual Studio Build Tools.")
+            return False
+
+        print("Installation of Visual Studio Build Tools completed successfully.")
+        return True
+    except Exception as e:
+        print(f"Error installing VS Build Tools: {e}")
+        return False
 
 def install_rust():
     def run_command(command):
@@ -236,31 +289,35 @@ def install_rust():
 
 basic_modules = [
     'numpy', 'pandas', 'matplotlib', 'scipy', 'requests', 'beautifulsoup4', 'seaborn', 'tqdm', 'docutils', 'pyyaml', 'python-dotenv', 'pillow',
-      'datetime',  'statistics',  'configparser'
+    'ipython', 'rich', 'click', 'urllib3', 'certifi', 'chardet', 'idna'
 ]
 
 advanced_modules = [
-    'argparse', 'asyncio', 'dataclasses', 'pytz', 'pathlib', 'typing_extensions', 'jsonschema', 'pydantic'
+    'pytz', 'typing_extensions', 'jsonschema', 'pydantic', 'attrs', 'pydantic-core', 'orjson', 'ujson'
 ]
 
 science_modules = [
     'numpy', 'scipy', 'matplotlib', 'pandas', 'scikit-image', 'statsmodels', 'sympy', 'networkx', 'biopython',
-    'h5py', 'numba', 'Cython', 'pandas-profiling', 'pytest', 'openpyxl', 'xlrd', 'scrapy', 'tabula-py', 'geopandas', 'pyproj'
+    'h5py', 'numba', 'Cython', 'pandas-profiling', 'pytest', 'openpyxl', 'xlrd', 'scrapy', 'tabula-py', 'geopandas', 'pyproj',
+    'numexpr', 'pint', 'patsy', 'arviz'
 ]
 
 computer_vision_modules = [
-    'opencv-python', 'Pillow', 'imageio', 'pytesseract', 'pyautogui', 'pyzbar', 'dlib',
-    'albumentations', 'scikit-image', 'mediapipe', 'mmcv', 'mmdet', 'face_recognition', 'imgaug', 'simplecv'
+    'opencv-python', 'opencv-contrib-python', 'Pillow', 'imageio', 'pytesseract', 'pyautogui', 'pyzbar', 'dlib',
+    'albumentations', 'scikit-image', 'mediapipe', 'mmcv', 'mmdet', 'face_recognition', 'imgaug', 'simplecv',
+    'imagehash', 'scikit-video'
 ]
 
 machine_learning_modules = [
     'scikit-learn', 'tensorflow', 'keras', 'xgboost', 'lightgbm', 'catboost', 'shap',
-    'pandas', 'dask', 'mlxtend', 'imbalanced-learn', 'optuna', 'hyperopt', 'mlflow', 'pymc3', 'h2o', 'ray'
+    'pandas', 'dask', 'mlxtend', 'imbalanced-learn', 'optuna', 'hyperopt', 'mlflow', 'pymc3', 'h2o', 'ray',
+    'featuretools', 'category-encoders', 'scikit-optimize', 'prophet'
 ]
 
 deep_learning_modules = [
     'torch', 'pytorch-lightning', 'transformers', 'fastai', 'keras-rl', 'tensorboard',
-    'onnx', 'onnxruntime', 'mxnet', 'chainer', 'deeplearning4j', 'paddlepaddle', 'theano', 'lasagne', 'gluonts'
+    'onnx', 'onnxruntime', 'mxnet', 'chainer', 'deeplearning4j', 'paddlepaddle', 'theano', 'lasagne', 'gluonts',
+    'accelerate', 'keras-tuner', 'tensorboardX'
 ]
 
 full_stack_development_modules = [
@@ -269,39 +326,40 @@ full_stack_development_modules = [
 ]
 
 network_modules = [
-    'socket', 'http.client', 'urllib', 'requests', 'socketIO-client', 'websockets', 'http.server', 'flask', 'django',
-    'ftplib', 'smtplib', 'imaplib', 'poplib', 'telnetlib', 'paramiko', 'dnspython', 'pyftpdlib', 'twisted', 'pyngrok', 'snmp', 'netmiko', 'nmap', 'scapy'
+    'requests', 'httpx', 'aiohttp', 'websockets', 'flask', 'django',
+    'paramiko', 'dnspython', 'pyftpdlib', 'twisted', 'pyngrok', 'snmp', 'netmiko', 'nmap', 'scapy', 'requests-toolbelt'
 ]
 
 build_modules = [
     'pep517', 'setuptools', 'build', 'wheel', 'pytoml', 'cmake',
-    'pyproject.toml', 'ninja', 'meson', 'scons', 'bazel', 'autoconf', 'automake', 'libtool', 'rust'
+    'pyproject.toml', 'ninja', 'meson', 'scons', 'bazel', 'autoconf', 'automake', 'libtool', 'rust', 'cibuildwheel'
 ]
 
 jupyter_modules = [
     'jupyter',
-    'notebook', 'jupyterlab', 'nbconvert', 'nbformat', 'ipywidgets', 'ipykernel', 'voila', 'jupyter_contrib_nbextensions', 'jupyter_dash', 'jupyter_bokeh', 'jupytext', 'jupyterhub', 'jupyter_client', 'qtconsole'
+    'notebook', 'jupyterlab', 'nbconvert', 'nbformat', 'ipywidgets', 'ipykernel', 'voila', 'jupyter_contrib_nbextensions', 'jupyter_dash', 'jupyter_bokeh', 'jupytext', 'jupyterhub', 'jupyter_client', 'qtconsole',
+    'jupyter_server', 'jupyterlab-widgets', 'nbclient', 'matplotlib-inline'
 ]
 
 data_visualization_modules = [
     'matplotlib', 'seaborn', 'plotly', 'bokeh', 'altair', 'holoviews', 'geopandas', 'folium', 'chart-studio', 'pyecharts',
     'hvplot', 'pygal', 'missingno', 'pandas_profiling', 'pywaffle', 'yellowbrick', 'networkx', 'graphviz', 'dash', 
-    'tableau', 'vispy', 'toyplot'
+    'tableau', 'vispy', 'toyplot', 'plotnine', 'kaleido', 'altair_saver'
 ]
 
 database_modules = [
-    'sqlalchemy', 'pymysql', 'psycopg2', 'sqlite3', 'mongodb', 'pymongo', 'tinydb', 'couchdb', 'cassandra-driver', 'happybase',
-    'redis', 'aioredis', 'aiomysql', 'pony', 'orm', 'orator', 'dataset', 'datasets', 'peewee', 'sqlalchemy-migrate', 'yoyo-migrations'
+    'sqlalchemy', 'pymysql', 'psycopg2-binary', 'mongodb', 'pymongo', 'tinydb', 'couchdb', 'cassandra-driver', 'happybase',
+    'redis', 'aioredis', 'aiomysql', 'pony', 'orm', 'orator', 'dataset', 'datasets', 'peewee', 'sqlalchemy-migrate', 'yoyo-migrations', 'asyncpg', 'duckdb'
 ]
 
 cybersecurity_modules = [
     'cryptography', 'pycryptodome', 'paramiko', 'scapy', 'pyshark', 'dnspython', 'impacket', 'requests', 'flask-security', 
-    'django-guardian', 'mitmproxy', 'pyOpenSSL', 'certifi', 'ssl', 'keyring', 'hpack', 'brotli', 'hashlib', 'python-nmap', 
-    'jinja2', 'pyjwt', 'passlib'
+    'django-guardian', 'mitmproxy', 'pyOpenSSL', 'certifi', 'keyring', 'hpack', 'brotli', 'python-nmap', 
+    'jinja2', 'pyjwt', 'passlib', 'bcrypt'
 ]
 
 cloud_computing_modules = [
-    'boto3', 'google-cloud', 'azure', 'awscli', 'cloudpickle', 'cloudmesh', 'apache-libcloud', 'terraform', 'pulumi', 'ansible',
+    'boto3', 'botocore', 'google-cloud', 'google-cloud-storage', 'azure', 'azure-storage-blob', 'awscli', 'cloudpickle', 'cloudmesh', 'apache-libcloud', 'terraform', 'pulumi', 'ansible',
     'kubernetes', 'docker', 'docker-compose', 'pywren', 'serverless', 'salt', 'pyinfra', 'cloudinary', 'paramiko', 'cloudant', 
     'python-openstackclient', 'troposphere'
 ]
@@ -309,13 +367,35 @@ cloud_computing_modules = [
 devops_modules = [
     'ansible', 'jenkins', 'travis-ci', 'git', 'docker', 'docker-compose', 'kubernetes', 'vagrant', 'puppet', 'chef', 
     'salt', 'fabric', 'terraform', 'consul', 'nomad', 'packer', 'helm', 'spinnaker', 'circleci', 'bamboo', 'gitlab', 
-    'gitea', 'hugo', 'mkdocs', 'pre-commit', 'pyinfra'
+    'gitea', 'hugo', 'mkdocs', 'pre-commit', 'pyinfra', 'invoke'
 ]
 
 big_data_modules = [
     'pyspark', 'hadoop', 'kafka', 'dask', 'ray', 'modin', 'polars', 'koalas', 'pyarrow', 'fastparquet', 
     'pydoop', 'pyhive', 'mrjob', 'h5py', 'tables', 'zarr',  'petastorm', 'cudf', 'datashader', 'blaze', 
-    'turicreate', 'pandas', 'pandas-profiling'
+    'turicreate', 'pandas', 'pandas-profiling', 'vaex', 'deltalake', 'pyorc', 'dask-ml'
+]
+
+
+# Additional Categories
+nlp_modules = [
+    'spacy', 'nltk', 'gensim', 'stanza', 'textblob', 'sentence-transformers', 'fasttext', 'flair', 'tokenizers', 'sumy'
+]
+
+audio_modules = [
+    'librosa', 'soundfile', 'pydub', 'torchaudio', 'audioread', 'noisereduce', 'sounddevice', 'praat-parselmouth'
+]
+
+web_framework_modules = [
+    'fastapi', 'flask', 'django', 'starlette', 'uvicorn', 'gunicorn', 'httpx', 'requests', 'sqlmodel', 'fastapi-users', 'pydantic-settings'
+]
+
+geospatial_modules = [
+    'geopandas', 'shapely', 'fiona', 'rasterio', 'pyproj', 'rtree', 'geopy', 'contextily', 'osmnx'
+]
+
+testing_modules = [
+    'pytest', 'hypothesis', 'tox', 'coverage', 'pytest-xdist', 'pytest-cov', 'pytest-mock', 'pytest-asyncio'
 ]
 
 
@@ -337,6 +417,11 @@ module_types = [
     'Cloud Computing Modules',
     'DevOps Modules',
     'Big Data Modules',
+    'NLP Modules',
+    'Audio Modules',
+    'Web Framework Modules',
+    'Geospatial Modules',
+    'Testing Modules',
 ]
 
 def installer():
@@ -362,6 +447,11 @@ def installer():
     'Cloud Computing Modules',
     'DevOps Modules',
     'Big Data Modules',
+    'NLP Modules',
+    'Audio Modules',
+    'Web Framework Modules',
+    'Geospatial Modules',
+    'Testing Modules',
 ]
 
         print("\nPlease select the type of modules you want to install:\n")

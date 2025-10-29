@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pymodins
-Version: 2.2.0
+Version: 3.0
 Summary: A Python module installer for newcomers and seasoned developers.
 Home-page: https://github.com/Nandhan-KA/pymodins
 Author: Nandhan K
@@ -27,7 +27,7 @@ License-File: LICENSE
 Requires-Dist: rich
 
 
-![Logo](source/PYMODINS.png)
+![Logo](https://drive.google.com/file/d/17tEHbis_SCBiKUNqOauYSwXmKZYiRHbs/view?usp=sharing)
 
 
 # PYMODINS
@@ -37,8 +37,8 @@ Requires-Dist: rich
 
 ## Badges
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)  [![PyPI](https://img.shields.io/pypi/v/pymodins?color=blue&label=PyPI&logo=python)](https://pypi.org/project/pymodins/) [![Python](https://img.shields.io/badge/Python-3.6%2B-blue?logo=python)](https://www.python.org/) [![Git](https://img.shields.io/badge/Git-Repository-orange?logo=git)](https://git-scm.com/) [![GitHub](https://img.shields.io/badge/GitHub-Project-black?logo=github)](https://github.com/) [![Windows](https://img.shields.io/badge/Windows-Supported-blue?logo=windows)](https://www.microsoft.com/en-us/windows)
+ [![Linux](https://img.shields.io/badge/Linux-Ubuntu%2FKali-critical?logo=linux)](https://www.linux.org/) [![Read the Docs](https://img.shields.io/readthedocs/pymodins?logo=read-the-docs)](https://pymodins.readthedocs.io/)
 
 ## ✨ Features
 
@@ -53,6 +53,28 @@ Requires-Dist: rich
 - Extensible: Open to contributions and can be extended to include more modules and features.
 
 
+## 🚢 What's New in 3.0
+
+- Graphical UI for Windows (`pymodins-ui`)
+  - Python version selector with compatibility-aware installs for 3.6–3.13 (automatic version pinning per package/Python).
+  - Auto-discovered Python folders dropdown (picks up installed Python\Scripts and lets you choose which pip to use).
+  - Full, real-time, colorized pip output streamed directly into the UI Output panel.
+  - Special handling for packages requiring system tools:
+    - dlib: prompts and invokes Visual Studio Build Tools installer before pip.
+    - rust: installs via rustup (no pip).
+  - Help → Documentation menu entry (opens project docs).
+
+- System Info tab upgrades
+  - CPU name and core count, total/available RAM, system disk total/free, and asynchronous average network speed estimate.
+
+- New and expanded categories (available in CLI and UI)
+  - New: NLP Modules, Audio Modules, Web Framework Modules, Geospatial Modules, Testing Modules.
+  - Existing categories expanded with many additional popular packages across ML, DL, CV, Viz, Data, DevOps, Cloud, etc.
+
+- CLI improvements retained
+  - pip upgrade helper, logging of installed modules, and Windows/Linux entrypoints.
+
+
 
 ## 🚀 Installation
 
@@ -61,22 +83,37 @@ git clone https://github.com/Nandhan-KA/pymodins.git
 
 cd pymodins 
 
-python setup.py Install 
+python3 setup.py install 
 ```
 
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to Install pymodins.
 
+#### For windows
 ```bash
-pip Install pymodins
+pip install pymodins
+```
+#### For Linux
+```bash
+sudo pip3 install pymodins
 ```
 
 ## 💻 Usage
 
+### Graphical UI (Windows)
+- Launch the UI:
+```bash
+pymodins-ui
+```
+- Notes:
+  - Run in an Administrator PowerShell/Command Prompt for installing system-wide.
+  - The UI supports Python-version-based package compatibility (3.6–3.13), auto-discovery of Python folders, and full colored pip logs.
+  - For dlib and Rust, the UI integrates required system installers (VS Build Tools and rustup).
 
-Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell
+### Python API / CLI
+Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell , same in Linux
 
-  or
+  or in Python terminal with Admin priviledges
 
 ```bash 
 import pymodins
@@ -167,8 +204,7 @@ pymodins.install_bigdata_modules()
 
 ## 🤝 Contributing
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
@@ -178,7 +214,7 @@ Please make sure to update tests as appropriate.
 ```
                             MIT License
 
-                    Copyright (c) 2024 Nandhan
+                    Copyright (c) 2025 Nandhan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -215,25 +251,28 @@ SOFTWARE.
 
 ## 💬 Support
 
-For support, email  nandhan2003alamelu@gmail.com 
+For support, email  developer.nandhank@gmail.com 
 
-# 🌈 Thank you for using this project!
+Thank you for using this project!
 
-# Feel free to ask your queries
+Feel free to ask your queries
 
-# Feel free to Modify
+Feel free to Modify
 
 
 
-## FAQ
+## 💬 FAQ
 
-#### Does this package can able to install packages of various domains?
-
-Answer: Yes
-
-#### Can users remodify this code and use it? 
+#### 1. Does this package can able to install packages of various domains?
 
 Answer: Yes
 
+#### 2. Can users remodify this code and use it? 
+
+Answer: Yes
+
+#### 3. Does this works on Linux?
+
+Answer Yes
 
 

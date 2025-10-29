@@ -7,7 +7,7 @@ with open('README.md', encoding='utf-8') as f:
 
 setup(
     name="pymodins",
-    version="2.2.0",
+    version="3.0",
     packages=find_packages(),
     install_requires=[
         "rich"
@@ -15,7 +15,8 @@ setup(
     entry_points={
         "console_scripts": [
             "pymodins=pymodins.__main__:main",
-            "pymodins-creator=pymodins.installer:creator"
+            "pymodins-creator=pymodins.installer:creator",
+            "pymodins-ui=pymodins.ui:main"
         ],
     },
     author="Nandhan K",

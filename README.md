@@ -25,6 +25,28 @@
 - Extensible: Open to contributions and can be extended to include more modules and features.
 
 
+## 🚢 What's New in 3.0
+
+- Graphical UI for Windows (`pymodins-ui`)
+  - Python version selector with compatibility-aware installs for 3.6–3.13 (automatic version pinning per package/Python).
+  - Auto-discovered Python folders dropdown (picks up installed Python\Scripts and lets you choose which pip to use).
+  - Full, real-time, colorized pip output streamed directly into the UI Output panel.
+  - Special handling for packages requiring system tools:
+    - dlib: prompts and invokes Visual Studio Build Tools installer before pip.
+    - rust: installs via rustup (no pip).
+  - Help → Documentation menu entry (opens project docs).
+
+- System Info tab upgrades
+  - CPU name and core count, total/available RAM, system disk total/free, and asynchronous average network speed estimate.
+
+- New and expanded categories (available in CLI and UI)
+  - New: NLP Modules, Audio Modules, Web Framework Modules, Geospatial Modules, Testing Modules.
+  - Existing categories expanded with many additional popular packages across ML, DL, CV, Viz, Data, DevOps, Cloud, etc.
+
+- CLI improvements retained
+  - pip upgrade helper, logging of installed modules, and Windows/Linux entrypoints.
+
+
 
 ## 🚀 Installation
 
@@ -50,6 +72,17 @@ sudo pip3 install pymodins
 
 ## 💻 Usage
 
+### Graphical UI (Windows)
+- Launch the UI:
+```bash
+pymodins-ui
+```
+- Notes:
+  - Run in an Administrator PowerShell/Command Prompt for installing system-wide.
+  - The UI supports Python-version-based package compatibility (3.6–3.13), auto-discovery of Python folders, and full colored pip logs.
+  - For dlib and Rust, the UI integrates required system installers (VS Build Tools and rustup).
+
+### Python API / CLI
 Simply run ```pymodins``` in Administrator Command prompt or Admin Powershell , same in Linux
 
   or in Python terminal with Admin priviledges

@@ -32,7 +32,7 @@ elif OS == "Linux":
 else:
     raise OSError(f"Unsupported operating system: {OS}")
 
-__version__ = "2.2.0"
+__version__ = "3.0"
 
 __all__ = [
     "installer",
