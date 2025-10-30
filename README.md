@@ -1,5 +1,4 @@
-
-![Logo](https://drive.google.com/file/d/17tEHbis_SCBiKUNqOauYSwXmKZYiRHbs/view?usp=sharing)
+![Logo](https://raw.githubusercontent.com/Nandhan-KA/pymodins/main/docs/source/_static/images/PYMODINS.png)
 
 
 # PYMODINS
