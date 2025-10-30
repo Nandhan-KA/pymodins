@@ -1,0 +1,42 @@
+[project]
+name = "pymodins"
+version = "3.0"
+description = "A Python module installer for newcomers and seasoned developers."
+keywords = [
+    "Python Module Installer",
+    "Python Package Installer",
+    "pymodins",
+    "Nandhan K",
+]
+classifiers = [
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Environment :: Win32 (MS Windows)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+authors = [{ name = "Nandhan K", email = "developer.nandhank@gmail.com" }]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+readme = "README.md"
+requires-python = ">=3.6"
+dependencies = ["rich"]
+
+[project.urls]
+Source = "https://github.com/Nandhan-KA/pymodins"
+
+[project.scripts]
+pymodins = "pymodins.__main__:main"
+pymodins-creator = "pymodins.installer:creator"
+pymodins-ui = "pymodins.ui:main"
+
+[build-system]
+requires = ["setuptools>=77.0.3"]
+build-backend = "setuptools.build_meta"

@@ -1,5 +1,5 @@
 
-.. image:: PYMODINS.png
+.. image:: _static/images/PYMODINS.png
    :alt: Pymodins Logo
    :align: center
    :width: 200px
@@ -68,7 +68,7 @@ To begin using **pymodins**, follow these simple steps:
 ```python
 pymodins
 ```
-.. image:: run.png
+.. image:: _static/images/run.png
    :alt: Running pymodins
    :align: center
    :width: 60%
@@ -85,7 +85,7 @@ Commands and Usage
       >>> import pymodins
       >>> pymodins.run() # Run the pymodins tool and it will guide you through the installation process.
 
-   .. image:: run.png
+   .. image:: _static/images/run.png
       :alt: Running pymodins
       :align: center
       :width: 60%
@@ -95,7 +95,7 @@ Commands and Usage
 
       >>> pymodins.install_basic_modules()
 
-   .. image:: basic_modules.png
+   .. image:: _static/images/basic_modules.png
       :alt: Installing Basic Modules
       :align: center
       :width: 60%
