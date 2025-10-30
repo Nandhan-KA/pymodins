@@ -9,11 +9,11 @@ keywords = [
     "Nandhan K",
 ]
 classifiers = [
-    "Programming Language :: Python :: 3",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
     "Environment :: Win32 (MS Windows)",
     "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
