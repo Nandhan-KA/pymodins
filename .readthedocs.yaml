@@ -6,11 +6,11 @@ build:
     python: "3"
 
 sphinx:
-  configuration: source/conf.py
+  configuration: docs/source/conf.py
 
 formats:
   - pdf
 
 python:
   install:
-    - requirements: source/requirements.txt
+    - requirements: docs/source/requirements.txt
