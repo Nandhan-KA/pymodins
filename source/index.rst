@@ -68,8 +68,8 @@ To begin using **pymodins**, follow these simple steps:
 ```python
 pymodins
 ```
-.. image:: run.png
-   :alt: Running pymodins
+.. image:: pymodins_ui.png
+   :alt: Pymodins UI
    :align: center
    :width: 60%
  
@@ -85,8 +85,8 @@ Commands and Usage
       >>> import pymodins
       >>> pymodins.run() # Run the pymodins tool and it will guide you through the installation process.
 
-   .. image:: run.png
-      :alt: Running pymodins
+   .. image:: pymodins_ui.png
+      :alt: Pymodins UI
       :align: center
       :width: 60%
 

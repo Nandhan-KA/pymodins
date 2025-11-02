@@ -7,7 +7,7 @@ with open('README.md', encoding='utf-8') as f:
 
 setup(
     name="pymodins",
-    version="3.0",
+    version="3.1",
     packages=find_packages(),
     install_requires=[
         "rich"

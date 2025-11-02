@@ -1,20 +1,63 @@
+# Read the Docs configuration file
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
 
-
-# Required
+# Required: Read the Docs configuration file version
 version: 2
 
+# Build configuration
 build:
+  # Operating system to use for the build
   os: ubuntu-22.04
-  tools:
-    python: "3.8"
-    
-sphinx:
-  configuration: source/conf.py
-
-formats:
-   - pdf
-
-python:
-   install:
-   - requirements: source/requirements.txt
   
+  # Tools and versions to use
+  tools:
+    # Python version for building the documentation
+    python: "3.10"
+
+# Sphinx configuration
+sphinx:
+  # Path to the Sphinx configuration file
+  configuration: source/conf.py
+  
+  # Additional build options
+  builder: html
+  
+  # Fail on warnings (set to false if you want warnings to not fail the build)
+  fail_on_warning: false
+
+# Output formats
+formats:
+  - htmlzip      # HTML zipped package for offline viewing
+  - pdf          # PDF documentation
+  - epub         # EPUB format for e-readers
+
+# Python environment configuration
+python:
+  # Install dependencies from requirements file
+  install:
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs
+    - requirements: source/requirements.txt
+
+# Build jobs configuration
+build:
+  # Commands to run before building documentation
+  commands:
+    - echo "Building PYMODINS documentation..."
+    - python --version
+    - pip --version
+
+# Additional settings
+# Enable or disable features
+submodules:
+  # Include git submodules if any
+  include:
+    - all
+  exclude:
+    - docs
+
+# Conda environment (not used in this case, but available)
+# conda:
+#   file: environment.yml
