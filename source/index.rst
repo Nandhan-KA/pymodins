@@ -1,8 +1,8 @@
 
-.. image:: PYMODINS.png
-   :alt: Pymodins Logo
+.. image:: pymodins_banner.png
+   :alt: Pymodins Banner
    :align: center
-   :width: 200px
+   :width: 600px
 
 Welcome to pymodins's Documentation!
 =====================================
@@ -66,15 +66,53 @@ To begin using **pymodins**, follow these simple steps:
 3. Run the following command in the command prompt or terminal:
 
 ```python
-pymodins
+pymodins-ui
 ```
 .. image:: pymodins_ui.png
    :alt: Pymodins UI
    :align: center
-   :width: 60%
+   :width: 70%
  
 Commands and Usage
 ==================
+
+**Graphical User Interface (Windows):**
+
+The PYMODINS GUI provides three main tabs for managing Python packages:
+
+1. **Install Tab**: Install packages from curated categories
+   
+   - Select from various package categories (Machine Learning, Deep Learning, Data Science, etc.)
+   - Choose individual packages or install entire categories
+   - Real-time installation progress with colorized output
+   - Python version selector for compatibility-aware installs
+   
+   .. image:: pymodins_ui.png
+      :alt: Pymodins Installation Interface
+      :align: center
+      :width: 70%
+
+2. **Installed Packages Tab**: View and manage installed packages
+   
+   - View all installed Python packages with their versions
+   - Search and filter packages by name
+   - Search PyPI and install selected packages directly from results
+   - Update selected packages to latest versions
+   - Uninstall selected packages
+   - Auto-refresh after installs, updates, and uninstalls
+   
+   .. image:: installed_package.png
+      :alt: Installed Packages Management
+      :align: center
+      :width: 70%
+
+3. **System Info Tab**: View system and environment information
+   
+   - CPU, RAM, disk, and network information
+   - Python and pip version details
+   - Admin privileges status
+
+**Command Line Interface (CLI):**
 
 **Basic Commands (if you want to install packages directly by your program):**
 
@@ -84,11 +122,6 @@ Commands and Usage
 
       >>> import pymodins
       >>> pymodins.run() # Run the pymodins tool and it will guide you through the installation process.
-
-   .. image:: pymodins_ui.png
-      :alt: Pymodins UI
-      :align: center
-      :width: 60%
 
 2. **Install Basic Modules:**
    .. code:: python
@@ -113,13 +146,31 @@ Commands and Usage
 Advanced Features
 =================
 
+**Version 3.2 Highlights:**
+
+- 📦 **Installed Packages Management**: View all installed packages, search, and update them directly from the GUI
+- 🔄 **Package Updates**: Select multiple packages and update them to the latest versions with one click
+- 🔍 **Smart Search**: Quickly find packages in the installed packages list
+- 📊 **System Information**: Comprehensive system details including CPU, RAM, disk, and network speed
+- 🎯 **Improved UI**: Three-tab interface (Install, Installed Packages, System Info) for better organization
+
 **Domain-Specific Package Installation:**
 
 Pymodins allows you to install packages based on specific domains such as:
 
-- **Machine Learning:** TensorFlow, Scikit-Learn, etc.
+- **Machine Learning:** TensorFlow, Scikit-Learn, PyTorch, etc.
 - **Data Visualization:** Matplotlib, Seaborn, Plotly.
-- **Web Development:** Flask, Django.
+- **Web Development:** Flask, Django, FastAPI.
+- **Deep Learning:** TensorFlow, PyTorch, Keras.
+- **Data Science:** Pandas, NumPy, SciPy.
+
+**Package Management Features:**
+
+- Install packages from curated categories
+- View all installed packages with versions
+- Update selected packages to latest versions
+- Search and filter installed packages
+- Automatic compatibility detection
 
 **Customization:**
 
@@ -128,6 +179,7 @@ Pymodins allows you to install packages based on specific domains such as:
 **Error Handling:**
 
 - Comprehensive error messages to guide users.
+- Real-time output for troubleshooting.
 
 Troubleshooting
 ===============

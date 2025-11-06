@@ -3,7 +3,7 @@
 project = 'pymodins'
 copyright = '2025, Nandhan K'
 author = 'Nandhan K'
-release = '3.1'
+release = '3.2'
 
 # -- General configuration ---------------------------------------------------
 extensions = [

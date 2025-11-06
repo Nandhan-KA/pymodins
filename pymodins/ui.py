@@ -6,20 +6,17 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter import filedialog
 
-# Reuse catalogs and helpers from the Windows installer using a file-based import to avoid
-# package attribute shadowing of the name "installer" in __init__.
 import os
 import importlib.util
 import webbrowser
 import json
 import urllib.request
+import urllib.parse
 import re
 import shutil
 import ctypes
 import time
 
-# Compatibility map of Python version -> { package_name(lower): pinned_version }
-# Only affects the UI installer; CLI keeps existing behavior.
 PY_VERSION_COMPAT = {
     '3.6': {
         'numpy': '1.19.5',
@@ -99,8 +96,6 @@ PY_VERSION_COMPAT = {
         'torch': '2.5.1',
     },
     '3.13': {
-        # Best-effort; many ecosystems are still rolling out wheels for 3.13.
-        # We intentionally avoid pinning most packages here.
         'numpy': '2.1.3',
         'pandas': '2.2.3',
         'matplotlib': '3.9.2',
@@ -136,14 +131,11 @@ def get_latest_compatible_version(package: str, py_version: str):
     releases = data.get('releases') or {}
     if not isinstance(releases, dict):
         return None
-    # Collect versions sortable; filter by requires_python if present
     def is_compatible(files):
-        # If any file has no requires_python, assume compatible; otherwise ensure py_version satisfies marker text simply.
         for f in files:
             rp = f.get('requires_python')
             if not rp:
                 return True
-            # Very light check: accept common forms like ">=3.8", ">=3.8,<3.12"
             text = rp.replace(" ", "")
             ok = True
             for clause in text.split(','):
@@ -160,7 +152,6 @@ def get_latest_compatible_version(package: str, py_version: str):
             if ok:
                 return True
         return False
-    # Sort versions via package order in JSON's 'releases' keys descending; fall back to 'info.version'
     candidates = []
     for ver, files in releases.items():
         if not files:
@@ -170,7 +161,6 @@ def get_latest_compatible_version(package: str, py_version: str):
     if not candidates:
         return None
     try:
-        # Attempt PEP 440 sort by using packaging if available; else fallback lexical which is usually fine for semver-like
         from packaging.version import parse as vparse
         candidates.sort(key=vparse, reverse=True)
     except Exception:
@@ -183,7 +173,6 @@ def resolve_requirement_for_version(module_name: str, py_version: str) -> str:
     Handles common name variants (e.g., pillow/Pillow).
     """
     base = normalize_pkg(module_name)
-    # Map a few known aliases to their canonical pip names
     alias = {
         'pil': 'pillow',
         'pillow': 'pillow',
@@ -196,7 +185,6 @@ def resolve_requirement_for_version(module_name: str, py_version: str) -> str:
     pinned = PY_VERSION_COMPAT.get(py_version, {}).get(canonical)
     if pinned:
         return f"{canonical}=={pinned}"
-    # Dynamic fallback: query PyPI to choose a compatible version for any package
     ver = get_latest_compatible_version(canonical, py_version)
     if ver:
         return f"{canonical}=={ver}"
@@ -211,9 +199,6 @@ assert _installer_spec and _installer_spec.loader
 _installer_spec.loader.exec_module(installer_mod)
 
 def get_modules_for_category(category_name):
-    """Return the list of modules for a given human-readable category name.
-    Mirrors the lookup used in installer.py using lower().replace(" ", "_") on the name.
-    """
     var_name = category_name.lower().replace(" ", "_")
     return getattr(installer_mod, var_name, [])
 
@@ -228,7 +213,6 @@ def _dedupe_preserve_order(items):
 
 def discover_python_scripts_folders():
     candidates = []
-    # 1) Python launcher listings
     try:
         result = subprocess.run(["py", "-0p"], capture_output=True, text=True)
         if result.returncode == 0:
@@ -236,14 +220,12 @@ def discover_python_scripts_folders():
                 path = line.strip()
                 if not path:
                     continue
-                # path points to python.exe; Scripts likely in same dir
                 parent = os.path.dirname(path)
                 scripts = os.path.join(parent, 'Scripts')
                 if os.path.isfile(os.path.join(scripts, 'pip.exe')):
                     candidates.append(scripts)
     except Exception:
         pass
-    # 2) User install directory
     try:
         user_dir = os.path.expandvars(r"%LOCALAPPDATA%\Programs\Python")
         if os.path.isdir(user_dir):
@@ -253,7 +235,6 @@ def discover_python_scripts_folders():
                     candidates.append(scripts)
     except Exception:
         pass
-    # 3) Program Files
     for base in [r"C:\\Program Files", r"C:\\Program Files (x86)"]:
         try:
             if os.path.isdir(base):
@@ -264,7 +245,6 @@ def discover_python_scripts_folders():
                             candidates.append(scripts)
         except Exception:
             pass
-    # 4) Current interpreter prefixes
     for p in [sys.prefix, sys.base_prefix]:
         try:
             scripts = os.path.join(p, 'Scripts')
@@ -272,7 +252,6 @@ def discover_python_scripts_folders():
                 candidates.append(scripts)
         except Exception:
             pass
-    # 5) PATH entries
     try:
         for part in (os.environ.get('PATH') or '').split(';'):
             if not part:
@@ -293,8 +272,8 @@ class InstallerUI(tk.Tk):
 
         self._install_in_progress = False
         self._selected_python_version = 'auto'
-        self._selected_python_folder = None  # Root or Scripts folder
-        # Color palette
+        self._selected_python_folder = None
+        self._cached_packages = []
         self.color_bg = "#ffffff"
         self.color_panel = "#f8f9fa"  # light gray
         self.color_text = "#212529"   # dark gray
@@ -302,10 +281,9 @@ class InstallerUI(tk.Tk):
         self.color_accent = "#007bff" # blue
         self.color_good = "#28a745"   # green
         self.color_warn = "#ffc107"   # yellow
-        self.color_alert = "#dc3545"  # red
+        self.color_alert = "#dc3545"
         self.configure(bg=self.color_bg)
 
-        # Ensure Windows and admin preconditions
         if platform.system().lower() != "windows":
             messagebox.showerror("Unsupported Platform", "This UI is designed for Windows only.")
             self.after(100, self.destroy)
@@ -317,7 +295,6 @@ class InstallerUI(tk.Tk):
         if not installer_mod.is_admin():
             if messagebox.askyesno("Admin Required", "Administrative privileges are required for installations.\n\nElevate now?"):
                 if installer_mod.run_as_admin():
-                    # Relaunch will occur, exit current process
                     self.after(100, self.destroy)
                     return
                 else:
@@ -329,27 +306,22 @@ class InstallerUI(tk.Tk):
         self.populate_categories()
 
     def create_widgets(self):
-        # Notebook for pages
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill=tk.BOTH, expand=True)
 
-        # Install page
         install_page = ttk.Frame(self.notebook)
         self.notebook.add(install_page, text="Install")
 
-        # Header (Install)
         header = ttk.Frame(install_page, padding=(10, 10))
         header.pack(fill=tk.X)
         ttk.Label(header, text="PYMODINS", style="Title.TLabel").pack(anchor="w")
         ttk.Label(header, text="Install curated Python modules with a click.", style="Subtitle.TLabel").pack(anchor="w")
 
-        # Top controls (Install)
         top_frame = ttk.Frame(install_page, padding=(10, 6))
         top_frame.pack(fill=tk.X)
         self.btn_upgrade = ttk.Button(top_frame, text="Upgrade pip", command=self.on_upgrade_pip)
         self.btn_upgrade.pack(side=tk.LEFT)
         ttk.Button(top_frame, text="System Info", command=self.on_system_info).pack(side=tk.LEFT, padx=(10, 0))
-        # Python version selector (UI-only behavior)
         ttk.Label(top_frame, text="Python version:").pack(side=tk.LEFT, padx=(16, 4))
         self.pyver_var = tk.StringVar(value='auto')
         self.pyver_combo = ttk.Combobox(
@@ -360,7 +332,6 @@ class InstallerUI(tk.Tk):
         )
         self.pyver_combo.pack(side=tk.LEFT)
         self.pyver_combo.bind('<<ComboboxSelected>>', self.on_pyver_change)
-        # Auto-discovered Python folders dropdown
         ttk.Label(top_frame, text="Python folder:").pack(side=tk.LEFT, padx=(16, 4))
         self.pyfolder_choice_var = tk.StringVar(value='auto')
         self.pyfolder_combo = ttk.Combobox(
@@ -371,11 +342,9 @@ class InstallerUI(tk.Tk):
         self.pyfolder_combo.pack(side=tk.LEFT)
         self.pyfolder_combo.bind('<<ComboboxSelected>>', self.on_pyfolder_change)
 
-        # Main panes
         main_pane = ttk.PanedWindow(install_page, orient=tk.HORIZONTAL)
         main_pane.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        # Categories list
         left_frame = ttk.Frame(main_pane)
         ttk.Label(left_frame, text="Categories").pack(anchor="w")
         cat_wrap = ttk.Frame(left_frame)
@@ -400,7 +369,6 @@ class InstallerUI(tk.Tk):
         self.category_list.bind("<<ListboxSelect>>", self.on_category_select)
         main_pane.add(left_frame, weight=1)
 
-        # Modules and actions
         right_frame = ttk.Frame(main_pane)
         ttk.Label(right_frame, text="Modules").pack(anchor="w")
         mod_wrap = ttk.Frame(right_frame)
@@ -430,7 +398,6 @@ class InstallerUI(tk.Tk):
         self.btn_install_all.pack(side=tk.LEFT, padx=(10, 0))
         main_pane.add(right_frame, weight=2)
 
-        # Log output (Install)
         log_container = ttk.Frame(install_page, padding=(10, 0))
         log_container.pack(fill=tk.BOTH, expand=True)
         progress_row = ttk.Frame(log_container)
@@ -458,7 +425,6 @@ class InstallerUI(tk.Tk):
         log_scroll.pack(side=tk.RIGHT, fill=tk.Y)
         _init_log_tags(self.log_text)
 
-        # Chat command bar
         chat = ttk.Frame(install_page, padding=(10, 6))
         chat.pack(fill=tk.X)
         ttk.Label(chat, text="Ask PYMODINS:").pack(side=tk.LEFT, padx=(0, 8))
@@ -467,7 +433,6 @@ class InstallerUI(tk.Tk):
         self.chat_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
         ttk.Button(chat, text="Go", command=self.on_chat_go).pack(side=tk.LEFT, padx=(8, 0))
 
-        # System Info page
         sys_page = ttk.Frame(self.notebook)
         self.notebook.add(sys_page, text="System Info")
 
@@ -484,14 +449,96 @@ class InstallerUI(tk.Tk):
         self.sysinfo_tree = ttk.Treeview(sys_body, columns=("value",), show="tree")
         self.sysinfo_tree.pack(fill=tk.BOTH, expand=True)
 
-        # Status bar
+        installed_page = ttk.Frame(self.notebook)
+        self.notebook.add(installed_page, text="Installed Packages")
+
+        installed_hdr = ttk.Frame(installed_page, padding=(10, 10))
+        installed_hdr.pack(fill=tk.X)
+        ttk.Label(installed_hdr, text="Installed Packages", style="Title.TLabel").pack(anchor="w")
+        ttk.Label(installed_hdr, text="View, manage, and search for Python packages.", style="Subtitle.TLabel").pack(anchor="w")
+        
+        search_pypi_frame = ttk.LabelFrame(installed_page, text="Search PyPI Packages", padding=(10, 6))
+        search_pypi_frame.pack(fill=tk.X, padx=10, pady=(0, 10))
+        search_pypi_row = ttk.Frame(search_pypi_frame)
+        search_pypi_row.pack(fill=tk.X)
+        ttk.Label(search_pypi_row, text="Package Name:").pack(side=tk.LEFT, padx=(0, 8))
+        self.pypi_search_var = tk.StringVar()
+        self.pypi_search_entry = ttk.Entry(search_pypi_row, textvariable=self.pypi_search_var, width=40)
+        self.pypi_search_entry.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        self.pypi_search_entry.bind('<Return>', lambda e: self.on_search_pypi())
+        self.btn_search_pypi = ttk.Button(search_pypi_row, text="Search", command=self.on_search_pypi)
+        self.btn_search_pypi.pack(side=tk.LEFT, padx=(10, 0))
+        self.btn_install_searched = ttk.Button(search_pypi_row, text="Install Selected", command=self.on_install_searched_packages, state='disabled')
+        self.btn_install_searched.pack(side=tk.LEFT, padx=(10, 0))
+        
+        search_results_frame = ttk.Frame(search_pypi_frame)
+        search_results_frame.pack(fill=tk.BOTH, expand=True, pady=(10, 0))
+        search_results_label = ttk.Label(search_results_frame, text="Search Results:")
+        search_results_label.pack(anchor="w")
+        search_results_wrap = ttk.Frame(search_results_frame)
+        search_results_wrap.pack(fill=tk.BOTH, expand=True)
+        search_results_scroll = ttk.Scrollbar(search_results_wrap, orient=tk.VERTICAL)
+        self.search_results_list = tk.Listbox(
+            search_results_wrap,
+            selectmode=tk.EXTENDED,
+            height=5,
+            bg=self.color_panel,
+            fg=self.color_text,
+            selectbackground=self.color_accent,
+            highlightthickness=0,
+            activestyle='none',
+            relief=tk.FLAT,
+            font=('Segoe UI', 10)
+        )
+        self.search_results_list.configure(yscrollcommand=search_results_scroll.set)
+        search_results_scroll.configure(command=self.search_results_list.yview)
+        self.search_results_list.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        search_results_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+
+        installed_controls = ttk.Frame(installed_page, padding=(10, 6))
+        installed_controls.pack(fill=tk.X)
+        ttk.Button(installed_controls, text="Refresh", command=self.render_installed_packages).pack(side=tk.LEFT)
+        self.btn_update_pkg = ttk.Button(installed_controls, text="Update Selected", command=self.on_update_selected_packages)
+        self.btn_update_pkg.pack(side=tk.LEFT, padx=(10, 0))
+        self.btn_uninstall_pkg = ttk.Button(installed_controls, text="Uninstall Selected", command=self.on_uninstall_selected_packages)
+        self.btn_uninstall_pkg.pack(side=tk.LEFT, padx=(10, 0))
+        ttk.Label(installed_controls, text="Filter Installed:").pack(side=tk.LEFT, padx=(16, 4))
+        self.pkg_search_var = tk.StringVar()
+        self.pkg_search_var.trace('w', lambda *args: self.filter_installed_packages())
+        pkg_search_entry = ttk.Entry(installed_controls, textvariable=self.pkg_search_var, width=30)
+        pkg_search_entry.pack(side=tk.LEFT)
+
+        installed_body = ttk.Frame(installed_page, padding=(10, 6))
+        installed_body.pack(fill=tk.BOTH, expand=True)
+        installed_wrap = ttk.Frame(installed_body)
+        installed_wrap.pack(fill=tk.BOTH, expand=True)
+        installed_scroll_y = ttk.Scrollbar(installed_wrap, orient=tk.VERTICAL)
+        installed_scroll_x = ttk.Scrollbar(installed_wrap, orient=tk.HORIZONTAL)
+        self.installed_tree = ttk.Treeview(
+            installed_wrap,
+            columns=("version",),
+            show="tree headings",
+            selectmode=tk.EXTENDED,
+            yscrollcommand=installed_scroll_y.set,
+            xscrollcommand=installed_scroll_x.set
+        )
+        self.installed_tree.heading("#0", text="Package Name", anchor=tk.W)
+        self.installed_tree.heading("version", text="Version", anchor=tk.W)
+        self.installed_tree.column("#0", width=400, stretch=True)
+        self.installed_tree.column("version", width=200, stretch=True)
+        installed_scroll_y.configure(command=self.installed_tree.yview)
+        installed_scroll_x.configure(command=self.installed_tree.xview)
+        self.installed_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        installed_scroll_y.pack(side=tk.RIGHT, fill=tk.Y)
+        installed_scroll_x.pack(side=tk.BOTTOM, fill=tk.X)
+
         status = ttk.Frame(self, padding=(10, 6))
         status.pack(fill=tk.X)
         self.status_var = tk.StringVar(value="Ready")
         ttk.Label(status, textvariable=self.status_var, style="Status.TLabel").pack(anchor="w")
         
-        # Initial system info render
         self.render_system_info()
+        self.render_installed_packages()
 
 
     def create_menu(self):
@@ -519,7 +566,6 @@ class InstallerUI(tk.Tk):
             style.theme_use('vista')
         except Exception:
             pass
-        # Base colors for light UI
         style.configure('TFrame', background=self.color_bg)
         style.configure('TLabelframe', background=self.color_bg, foreground=self.color_text)
         style.configure('TLabelframe.Label', background=self.color_bg, foreground=self.color_text)
@@ -544,12 +590,10 @@ class InstallerUI(tk.Tk):
             self.status_var.set("Using current interpreter for installs")
 
     def on_select_python_folder(self):
-        # Let user select a folder; accept either root (containing Scripts) or the Scripts folder itself
         folder = filedialog.askdirectory(title="Select Python folder or its Scripts folder")
         if not folder:
             return
         folder = os.path.normpath(folder)
-        # Normalize to Scripts folder if root
         scripts = folder
         if os.path.basename(scripts).lower() != 'scripts':
             candidate = os.path.join(scripts, 'Scripts')
@@ -560,35 +604,29 @@ class InstallerUI(tk.Tk):
             messagebox.showerror("Invalid Folder", "Selected folder does not contain pip.exe (expected in a Scripts folder).")
             return
         self._selected_python_folder = scripts
-        self.pyfolder_choice_var.set(scripts) # Set the combobox value
+        self.pyfolder_choice_var.set(scripts)
         self.status_var.set(f"Using selected Python folder for installs: {os.path.basename(os.path.dirname(scripts))}\\Scripts")
 
     def _resolve_pip_command(self, requirement: str):
-        """Return (cmd_list, cwd, python_folder_for_log) using either selected Scripts pip.exe or current interpreter."""
         if self._selected_python_folder:
             pip_path = os.path.join(self._selected_python_folder, 'pip.exe')
             if os.path.isfile(pip_path):
                 return ([pip_path, 'install', requirement], self._selected_python_folder, os.path.basename(os.path.dirname(self._selected_python_folder)))
-        # Fallback to current interpreter
         return ([sys.executable, '-m', 'pip', 'install', requirement], None, 'current-interpreter')
 
     def populate_categories(self):
-        # Use the same human-readable list from installer (skip the leading None)
         self.categories = [c for c in installer_mod.module_types if c]
         self.category_list.delete(0, tk.END)
         for c in self.categories:
             self.category_list.insert(tk.END, c)
-        # Also populate Python folders after categories are ready (during init)
         self.populate_python_folders()
 
     def populate_python_folders(self):
         self._pyfolder_display_to_path = {'auto': None}
         display_values = ['auto']
         for scripts in discover_python_scripts_folders():
-            # Display as <ParentName>\\Scripts (e.g., Python311\Scripts)
             parent = os.path.basename(os.path.dirname(scripts))
             display = f"{parent}\\Scripts"
-            # Ensure unique display; if collision, append index
             orig_display = display
             idx = 2
             while display in self._pyfolder_display_to_path:
@@ -646,7 +684,6 @@ class InstallerUI(tk.Tk):
     def on_system_info(self):
         try:
             self.render_system_info()
-            # Switch to System Info tab
             for i in range(self.notebook.index('end')):
                 if self.notebook.tab(i, 'text') == 'System Info':
                     self.notebook.select(i)
@@ -655,7 +692,6 @@ class InstallerUI(tk.Tk):
             messagebox.showerror("Error", f"Failed to load system info: {e}")
 
     def render_system_info(self):
-        # Populate the tree with key/value pairs
         self.sysinfo_tree.delete(*self.sysinfo_tree.get_children())
         def add(label, value):
             self.sysinfo_tree.insert('', 'end', text=f"{label}: {value}")
@@ -667,23 +703,19 @@ class InstallerUI(tk.Tk):
             add('pip', pip_version)
             add('Admin', bool(installer_mod.is_admin()))
             add('Internet', bool(installer_mod.internet()))
-            # CPU
             cpu_name = platform.processor() or 'Unknown CPU'
             cores = os.cpu_count() or 0
             add('CPU', f"{cpu_name} ({cores} cores)")
-            # RAM
             total_ram, avail_ram = _get_windows_memory_gb()
             if total_ram is not None:
                 add('Memory (RAM)', f"Total: {total_ram:.1f} GB, Available: {avail_ram:.1f} GB")
             else:
                 add('Memory (RAM)', 'N/A')
-            # Disk
             total_disk, used_disk, free_disk = _get_disk_usage_gb()
             if total_disk is not None:
                 add('Disk (System Drive)', f"Total: {total_disk:.1f} GB, Free: {free_disk:.1f} GB")
             else:
                 add('Disk (System Drive)', 'N/A')
-            # Network speed placeholder
             self._net_speed_item = self.sysinfo_tree.insert('', 'end', text='Network Speed: estimating...')
             def _compute_speed():
                 speed = _measure_network_speed_mb_s()
@@ -695,6 +727,247 @@ class InstallerUI(tk.Tk):
             threading.Thread(target=_compute_speed, daemon=True).start()
         except Exception as e:
             add('Error', str(e))
+
+    def render_installed_packages(self):
+        self.installed_tree.delete(*self.installed_tree.get_children())
+        self.status_var.set("Fetching installed packages...")
+        
+        def fetch_packages():
+            packages = []
+            try:
+                cmd = [sys.executable, '-m', 'pip', 'list', '--format=json']
+                if self._selected_python_folder:
+                    pip_path = os.path.join(self._selected_python_folder, 'pip.exe')
+                    if os.path.isfile(pip_path):
+                        cmd = [pip_path, 'list', '--format=json']
+                        cwd = self._selected_python_folder
+                    else:
+                        cwd = None
+                else:
+                    cwd = None
+                
+                result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=30)
+                if result.returncode == 0:
+                    try:
+                        packages_data = json.loads(result.stdout)
+                        packages = [(pkg.get('name', ''), pkg.get('version', '')) for pkg in packages_data]
+                        packages.sort(key=lambda x: x[0].lower())
+                    except json.JSONDecodeError:
+                        for line in result.stdout.splitlines():
+                            if line.strip():
+                                parts = line.strip().split()
+                                if len(parts) >= 2:
+                                    packages.append((parts[0], parts[1]))
+                else:
+                    cmd_freeze = [sys.executable, '-m', 'pip', 'freeze']
+                    if self._selected_python_folder:
+                        pip_path = os.path.join(self._selected_python_folder, 'pip.exe')
+                        if os.path.isfile(pip_path):
+                            cmd_freeze = [pip_path, 'freeze']
+                            cwd = self._selected_python_folder
+                    result_freeze = subprocess.run(cmd_freeze, capture_output=True, text=True, cwd=cwd, timeout=30)
+                    if result_freeze.returncode == 0:
+                        for line in result_freeze.stdout.splitlines():
+                            line = line.strip()
+                            if line and not line.startswith('#'):
+                                if '==' in line:
+                                    parts = line.split('==', 1)
+                                    packages.append((parts[0].strip(), parts[1].strip()))
+            except subprocess.TimeoutExpired:
+                packages = []
+            except Exception:
+                packages = []
+            
+            self.after(0, lambda: self._populate_packages_tree(packages))
+        
+        threading.Thread(target=fetch_packages, daemon=True).start()
+
+    def _populate_packages_tree(self, packages):
+        self._cached_packages = packages
+        self._apply_package_filter()
+    
+    def _apply_package_filter(self):
+        self.installed_tree.delete(*self.installed_tree.get_children())
+        if not self._cached_packages:
+            self.installed_tree.insert('', 'end', text="No packages found or error occurred", values=('',))
+            self.status_var.set("Ready")
+            return
+        
+        search_term = (self.pkg_search_var.get() or '').strip().lower()
+        filtered_count = 0
+        for pkg_name, pkg_version in self._cached_packages:
+            if not search_term or search_term in pkg_name.lower():
+                self.installed_tree.insert('', 'end', text=pkg_name, values=(pkg_version,))
+                filtered_count += 1
+        
+        total_count = len(self._cached_packages)
+        if search_term:
+            self.status_var.set(f"Ready - {filtered_count} of {total_count} package(s) displayed")
+        else:
+            self.status_var.set(f"Ready - {filtered_count} package(s) displayed")
+    
+    def filter_installed_packages(self):
+        if hasattr(self, '_cached_packages') and self._cached_packages:
+            self._apply_package_filter()
+
+    def on_update_selected_packages(self):
+        if not self.ensure_ready():
+            return
+        selected_items = self.installed_tree.selection()
+        if not selected_items:
+            messagebox.showinfo("No Selection", "Please select one or more packages to update.")
+            return
+        
+        packages_to_update = []
+        for item in selected_items:
+            pkg_name = self.installed_tree.item(item, 'text')
+            if pkg_name and pkg_name != "No packages found or error occurred":
+                packages_to_update.append(pkg_name)
+        
+        if not packages_to_update:
+            messagebox.showinfo("Invalid Selection", "No valid packages selected.")
+            return
+        
+        if not messagebox.askyesno("Confirm Update", f"Update {len(packages_to_update)} selected package(s)?\n\nThis will upgrade them to the latest versions."):
+            return
+        
+        self._update_packages(packages_to_update)
+
+    def _update_packages(self, packages):
+        if self._install_in_progress:
+            return
+        self._install_in_progress = True
+        self.set_controls_state("disabled")
+        self.btn_update_pkg.state(['disabled'])
+        self.status_var.set(f"Updating {len(packages)} package(s)...")
+        
+        try:
+            for tab_idx in range(self.notebook.index('end')):
+                if self.notebook.tab(tab_idx, 'text') == 'Install':
+                    self.notebook.select(tab_idx)
+                    break
+        except Exception:
+            pass
+        
+        self.append_log(f"Updating {len(packages)} package(s): {', '.join(packages)}\n")
+        self.progress.configure(maximum=len(packages), value=0)
+        threading.Thread(target=self._update_worker, args=(packages,), daemon=True).start()
+
+    def _update_worker(self, packages):
+        completed = 0
+        for package in packages:
+            self.append_log(f"Updating {package}...\n")
+            try:
+                if self._selected_python_folder:
+                    pip_path = os.path.join(self._selected_python_folder, 'pip.exe')
+                    if os.path.isfile(pip_path):
+                        cmd = [pip_path, 'install', '--upgrade', package]
+                        cwd = self._selected_python_folder
+                    else:
+                        cmd = [sys.executable, '-m', 'pip', 'install', '--upgrade', package]
+                        cwd = None
+                else:
+                    cmd = [sys.executable, '-m', 'pip', 'install', '--upgrade', package]
+                    cwd = None
+                rc = self._run_and_stream(cmd, cwd=cwd)
+                if rc == 0:
+                    self.append_log(f"✓ {package} updated successfully.\n")
+                else:
+                    self.append_log(f"✗ {package} update failed ({rc}).\n")
+            except Exception as e:
+                self.append_log(f"Error updating {package}: {e}\n")
+            finally:
+                completed += 1
+                self.update_progress_safe(completed)
+        
+        self.append_log("Update completed.\n")
+        self.status_var.set("Ready")
+        self.set_controls_state("!disabled")
+        self.btn_update_pkg.state(['!disabled'])
+        self._install_in_progress = False
+        self.after(0, self.render_installed_packages)
+
+    def on_uninstall_selected_packages(self):
+        if not self.ensure_ready():
+            return
+        selected_items = self.installed_tree.selection()
+        if not selected_items:
+            messagebox.showinfo("No Selection", "Please select one or more packages to uninstall.")
+            return
+        
+        packages_to_uninstall = []
+        for item in selected_items:
+            pkg_name = self.installed_tree.item(item, 'text')
+            if pkg_name and pkg_name != "No packages found or error occurred":
+                packages_to_uninstall.append(pkg_name)
+        
+        if not packages_to_uninstall:
+            messagebox.showinfo("Invalid Selection", "No valid packages selected.")
+            return
+        
+        warning_msg = (
+            f"Are you sure you want to uninstall {len(packages_to_uninstall)} selected package(s)?\n\n"
+            f"Packages: {', '.join(packages_to_uninstall)}\n\n"
+            "This action cannot be undone. The packages will be completely removed from your Python environment."
+        )
+        if not messagebox.askyesno("Confirm Uninstall", warning_msg):
+            return
+        
+        self._uninstall_packages(packages_to_uninstall)
+
+    def _uninstall_packages(self, packages):
+        if self._install_in_progress:
+            return
+        self._install_in_progress = True
+        self.set_controls_state("disabled")
+        self.btn_uninstall_pkg.state(['disabled'])
+        self.status_var.set(f"Uninstalling {len(packages)} package(s)...")
+        
+        try:
+            for tab_idx in range(self.notebook.index('end')):
+                if self.notebook.tab(tab_idx, 'text') == 'Install':
+                    self.notebook.select(tab_idx)
+                    break
+        except Exception:
+            pass
+        
+        self.append_log(f"Uninstalling {len(packages)} package(s): {', '.join(packages)}\n")
+        self.progress.configure(maximum=len(packages), value=0)
+        threading.Thread(target=self._uninstall_worker, args=(packages,), daemon=True).start()
+
+    def _uninstall_worker(self, packages):
+        completed = 0
+        for package in packages:
+            self.append_log(f"Uninstalling {package}...\n")
+            try:
+                if self._selected_python_folder:
+                    pip_path = os.path.join(self._selected_python_folder, 'pip.exe')
+                    if os.path.isfile(pip_path):
+                        cmd = [pip_path, 'uninstall', '-y', package]
+                        cwd = self._selected_python_folder
+                    else:
+                        cmd = [sys.executable, '-m', 'pip', 'uninstall', '-y', package]
+                        cwd = None
+                else:
+                    cmd = [sys.executable, '-m', 'pip', 'uninstall', '-y', package]
+                    cwd = None
+                rc = self._run_and_stream(cmd, cwd=cwd)
+                if rc == 0:
+                    self.append_log(f"✓ {package} uninstalled successfully.\n")
+                else:
+                    self.append_log(f"✗ {package} uninstall failed ({rc}).\n")
+            except Exception as e:
+                self.append_log(f"Error uninstalling {package}: {e}\n")
+            finally:
+                completed += 1
+                self.update_progress_safe(completed)
+        
+        self.append_log("Uninstall completed.\n")
+        self.status_var.set("Ready")
+        self.set_controls_state("!disabled")
+        self.btn_uninstall_pkg.state(['!disabled'])
+        self._install_in_progress = False
+        self.after(0, self.render_installed_packages)
 
     def on_install_selected(self):
         if not self.ensure_ready():
@@ -739,11 +1012,9 @@ class InstallerUI(tk.Tk):
         threading.Thread(target=self._install_worker, args=(category, modules), daemon=True).start()
 
     def _install_worker(self, category, modules):
-        # Prefer current interpreter; this avoids brittle path guessing.
         completed = 0
         for module in modules:
             norm = normalize_pkg(module)
-            # Special-case handling before computing requirement
             if norm == 'rust':
                 self.append_log("Installing Rust toolchain via system installer...\n")
                 try:
@@ -763,7 +1034,6 @@ class InstallerUI(tk.Tk):
                     self.update_progress_safe(completed)
                 continue
             if norm == 'dlib':
-                # Ensure VS Build Tools before attempting pip install of dlib
                 self.append_log("Preparing environment for dlib (installing Visual Studio Build Tools if needed)...\n")
                 try:
                     if messagebox.askyesno(
@@ -779,7 +1049,6 @@ class InstallerUI(tk.Tk):
                     self.append_log(f"Warning: Failed to invoke VS Build Tools installer: {e}\n")
             pyver = self._selected_python_version
             if pyver == 'auto':
-                # Auto mode: use current interpreter without pinning (as before)
                 requirement = module
                 ver_note = f" (auto: {platform.python_version()})"
             else:
@@ -792,10 +1061,8 @@ class InstallerUI(tk.Tk):
                 if rc == 0:
                     self.append_log(f"✓ {requirement} installed.\n")
                     try:
-                        # Log via existing helper
                         installer_mod.log_mod(category, requirement, python_folder=py_folder_log)
                     except TypeError:
-                        # Older signature without python_folder
                         try:
                             installer_mod.log_mod(category, requirement)  # type: ignore
                         except Exception:
@@ -811,6 +1078,7 @@ class InstallerUI(tk.Tk):
         self.status_var.set("Ready")
         self.set_controls_state("!disabled")
         self._install_in_progress = False
+        self.after(0, self.render_installed_packages)
 
     def append_log(self, text):
         self.log_text.insert(tk.END, text)
@@ -827,14 +1095,216 @@ class InstallerUI(tk.Tk):
             self.btn_upgrade.state([state])
             self.btn_install_sel.state([state])
             self.btn_install_all.state([state])
+            if hasattr(self, 'btn_update_pkg'):
+                self.btn_update_pkg.state([state])
+            if hasattr(self, 'btn_uninstall_pkg'):
+                self.btn_uninstall_pkg.state([state])
+            if hasattr(self, 'btn_install_searched'):
+                self.btn_install_searched.state([state])
+            if hasattr(self, 'btn_search_pypi'):
+                self.btn_search_pypi.state([state])
         except Exception:
             pass
+
+    def on_search_pypi(self):
+        query = (self.pypi_search_var.get() or '').strip()
+        if not query:
+            messagebox.showinfo("Empty Search", "Please enter a package name to search.")
+            return
+        
+        self.status_var.set(f"Searching PyPI for: {query}...")
+        self.btn_search_pypi.state(['disabled'])
+        self.search_results_list.delete(0, tk.END)
+        self.search_results_list.insert(0, "Searching...")
+        threading.Thread(target=self._search_pypi_worker, args=(query,), daemon=True).start()
+
+    def _search_pypi_worker(self, query):
+        results = []
+        query_clean = query.strip()
+        if not query_clean:
+            self.after(0, lambda: self._populate_search_results(query_clean, []))
+            return
+        
+        try:
+            direct_url = f"https://pypi.org/pypi/{urllib.parse.quote(query_clean)}/json"
+            with urllib.request.urlopen(direct_url, timeout=8) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+                if data and data.get('info', {}).get('name'):
+                    results = [data['info']['name']]
+        except Exception:
+            pass
+        
+        if not results:
+            try:
+                search_url = f"https://pypi.org/search/?q={urllib.parse.quote(query_clean)}"
+                req = urllib.request.Request(search_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    html = resp.read().decode('utf-8', errors='ignore')
+                    
+                    package_names = set()
+                    query_lower = query_clean.lower()
+                    
+                    package_snippet_sections = re.findall(r'<a[^>]*class="package-snippet"[^>]*>(.*?)</a>', html, re.IGNORECASE | re.DOTALL)
+                    for section in package_snippet_sections:
+                        name_match = re.search(r'<span[^>]*class="package-snippet__name"[^>]*>([^<]+)</span>', section, re.IGNORECASE)
+                        if name_match:
+                            name = name_match.group(1).strip()
+                            if name:
+                                package_names.add(name)
+                    
+                    if not package_names:
+                        href_matches = re.findall(r'<a[^>]*class="package-snippet"[^>]*href="/project/([^/]+)/"', html, re.IGNORECASE)
+                        for match in href_matches:
+                            name = match.strip()
+                            if name:
+                                package_names.add(name)
+                    
+                    if not package_names:
+                        name_spans = re.findall(r'<span[^>]*class="package-snippet__name"[^>]*>([^<]+)</span>', html, re.IGNORECASE)
+                        for name in name_spans:
+                            name_clean = name.strip()
+                            if name_clean:
+                                package_names.add(name_clean)
+                    
+                    if not package_names:
+                        all_project_links = re.findall(r'href="/project/([a-zA-Z0-9_\-\.]+)/"', html)
+                        seen = set()
+                        for proj in all_project_links:
+                            proj_clean = proj.strip()
+                            if proj_clean and query_lower in proj_clean.lower() and proj_clean.lower() not in seen:
+                                seen.add(proj_clean.lower())
+                                package_names.add(proj_clean)
+                                if len(package_names) >= 30:
+                                    break
+                    
+                    results = sorted(list(package_names))[:30]
+            except Exception as e:
+                pass
+        
+        if not results:
+            try:
+                if self._selected_python_folder:
+                    pip_path = os.path.join(self._selected_python_folder, 'pip.exe')
+                    if os.path.isfile(pip_path):
+                        cmd = [pip_path, 'index', 'versions', query_clean]
+                        cwd = self._selected_python_folder
+                    else:
+                        cmd = [sys.executable, '-m', 'pip', 'index', 'versions', query_clean]
+                        cwd = None
+                else:
+                    cmd = [sys.executable, '-m', 'pip', 'index', 'versions', query_clean]
+                    cwd = None
+                
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=10, cwd=cwd)
+                if result.returncode == 0:
+                    if query_clean.lower() in result.stdout.lower() or 'Available versions' in result.stdout:
+                        results = [query_clean]
+            except Exception:
+                pass
+        
+        self.after(0, lambda: self._populate_search_results(query_clean, results))
+
+    def _populate_search_results(self, query, results):
+        self.btn_search_pypi.state(['!disabled'])
+        self.search_results_list.delete(0, tk.END)
+        
+        if not results:
+            self.search_results_list.insert(0, f"No packages found for '{query}'")
+            self.status_var.set(f"No results found for: {query}")
+            self.btn_install_searched.state(['disabled'])
+            return
+        
+        for result in results[:50]:
+            self.search_results_list.insert(tk.END, result)
+        
+        self.status_var.set(f"Found {len(results)} package(s) for: {query}")
+        self.btn_install_searched.state(['!disabled'])
+
+    def on_install_searched_packages(self):
+        if not self.ensure_ready():
+            return
+        selected_indices = self.search_results_list.curselection()
+        if not selected_indices:
+            messagebox.showinfo("No Selection", "Please select one or more packages to install.")
+            return
+        
+        packages_to_install = []
+        for idx in selected_indices:
+            pkg_name = self.search_results_list.get(idx)
+            if pkg_name and pkg_name not in ["No packages found", "Searching..."] and not pkg_name.startswith("No packages found"):
+                packages_to_install.append(pkg_name)
+        
+        if not packages_to_install:
+            messagebox.showinfo("Invalid Selection", "No valid packages selected.")
+            return
+        
+        self._install_search_packages(packages_to_install)
+
+    def _install_search_packages(self, packages):
+        if self._install_in_progress:
+            return
+        self._install_in_progress = True
+        self.set_controls_state("disabled")
+        self.btn_install_searched.state(['disabled'])
+        self.status_var.set(f"Installing {len(packages)} package(s)...")
+        
+        try:
+            for tab_idx in range(self.notebook.index('end')):
+                if self.notebook.tab(tab_idx, 'text') == 'Install':
+                    self.notebook.select(tab_idx)
+                    break
+        except Exception:
+            pass
+        
+        self.append_log(f"Installing {len(packages)} package(s) from search: {', '.join(packages)}\n")
+        self.progress.configure(maximum=len(packages), value=0)
+        threading.Thread(target=self._install_search_worker, args=(packages,), daemon=True).start()
+
+    def _install_search_worker(self, packages):
+        completed = 0
+        for package in packages:
+            pyver = self._selected_python_version
+            if pyver == 'auto':
+                requirement = package
+                ver_note = f" (auto: {platform.python_version()})"
+            else:
+                requirement = resolve_requirement_for_version(package, pyver)
+                ver_note = f" (using compat for Python {pyver})"
+            self.append_log(f"Installing {requirement}{ver_note}...\n")
+            try:
+                if self._selected_python_folder:
+                    pip_path = os.path.join(self._selected_python_folder, 'pip.exe')
+                    if os.path.isfile(pip_path):
+                        cmd = [pip_path, 'install', requirement]
+                        cwd = self._selected_python_folder
+                    else:
+                        cmd = [sys.executable, '-m', 'pip', 'install', requirement]
+                        cwd = None
+                else:
+                    cmd = [sys.executable, '-m', 'pip', 'install', requirement]
+                    cwd = None
+                rc = self._run_and_stream(cmd, cwd=cwd)
+                if rc == 0:
+                    self.append_log(f"✓ {requirement} installed successfully.\n")
+                else:
+                    self.append_log(f"✗ {requirement} failed ({rc}).\n")
+            except Exception as e:
+                self.append_log(f"Error installing {requirement}: {e}\n")
+            finally:
+                completed += 1
+                self.update_progress_safe(completed)
+        
+        self.append_log("Installation completed.\n")
+        self.status_var.set("Ready")
+        self.set_controls_state("!disabled")
+        self.btn_install_searched.state(['!disabled'])
+        self._install_in_progress = False
+        self.after(0, self.render_installed_packages)
 
     def on_chat_go(self):
         query = (self.chat_var.get() or '').strip().lower()
         if not query:
             return
-        # Keyword to category mapping
         mapping = {
             'basic': 'Basic Modules',
             'beginner': 'Basic Modules',
@@ -865,7 +1335,6 @@ class InstallerUI(tk.Tk):
                 target = cat
                 break
         if not target:
-            # Fallback: try to fuzzy match by words present in module_types
             for cat in installer_mod.module_types:
                 if not cat:
                     continue
@@ -873,7 +1342,6 @@ class InstallerUI(tk.Tk):
                     target = cat
                     break
         if target:
-            # Select category in listbox
             try:
                 idx = self.categories.index(target)
                 self.category_list.selection_clear(0, tk.END)
@@ -901,13 +1369,11 @@ class InstallerUI(tk.Tk):
             self.append_log(f"Failed to start process: {e}\n")
             return 1
         state = AnsiState()
-        # Read line by line to keep UI responsive
         try:
             for line in iter(proc.stdout.readline, ''):
                 try:
                     insert_ansi(self.log_text, line, state)
                 except Exception:
-                    # Fallback: plain append
                     self.append_log(line)
             proc.stdout.close()
         except Exception:
@@ -917,7 +1383,6 @@ class InstallerUI(tk.Tk):
 
 def main():
     app = InstallerUI()
-    # If platform/admin checks destroyed the window, avoid mainloop
     try:
         app.mainloop()
     except Exception:
@@ -925,7 +1390,6 @@ def main():
 
 
 def _init_log_tags(text_widget: tk.Text):
-    # Basic foreground colors and styles to approximate terminal output
     colors = {
         'fg_black': '#000000', 'fg_red': '#d32f2f', 'fg_green': '#388e3c', 'fg_yellow': '#fbc02d',
         'fg_blue': '#1976d2', 'fg_magenta': '#7b1fa2', 'fg_cyan': '#0097a7', 'fg_white': '#e0e0e0',
@@ -1014,7 +1478,6 @@ def _get_disk_usage_gb():
         return None, None, None
 
 def _measure_network_speed_mb_s(timeout_sec=6):
-    # Best-effort: download ~1MB and time it
     url = 'https://speed.hetzner.de/1MB.bin'
     start = time.time()
     bytes_read = 0

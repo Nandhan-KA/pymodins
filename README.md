@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="source/PYMODINS.png" alt="PYMODINS Logo" width="600"/>
+  <img src="https://raw.githubusercontent.com/Nandhan-KA/pymodins/main/source/pymodins_banner.png" alt="PYMODINS Logo" width="600"/>
   
   # PYMODINS
   
@@ -59,12 +59,23 @@
 
 ---
 
-## 🚢 What's New in 3.1
+## 🚢 What's New in 3.2
+
+### 📦 Installed Packages Management
+- **Installed Packages Tab**: New dedicated tab to view all installed Python packages and their versions
+- **Real-time Package Listing**: Automatically fetches and displays all installed packages from your Python environment
+- **Search Functionality**: Quickly filter and search through installed packages by name
+- **Update Selected Packages**: Select one or multiple packages and update them to the latest versions with a single click
+- **Multi-selection Support**: Use Ctrl/Cmd+click or Shift+click to select multiple packages for bulk updates
+- **Auto-refresh**: Package list automatically refreshes after installations or updates
+- **Version Display**: Clear version information for each installed package
+- **Python Folder Support**: Works with the selected Python installation or current interpreter
 
 ### 🎨 Enhanced Graphical User Interface
 - **Modern Design**: Completely redesigned user interface with improved aesthetics and usability
-- **Intuitive Navigation**: Streamlined menus and controls for better user experience
+- **Intuitive Navigation**: Streamlined menus and controls with three main tabs (Install, System Info, Installed Packages)
 - **Visual Feedback**: Enhanced status indicators and progress tracking
+- **Tab-based Organization**: Better organization with dedicated tabs for different functionalities
 
 ### 🔧 Technical Improvements
 - **Python Version Selector**: Compatibility-aware installs for Python 3.6–3.13 with automatic version pinning
@@ -73,6 +84,7 @@
 - **System Tools Integration**: 
   - **dlib**: Automatically prompts and invokes Visual Studio Build Tools installer
   - **rust**: Seamlessly installs via rustup
+- **Background Processing**: All package operations run in background threads for responsive UI
 
 ### 📊 System Information Panel
 - **Hardware Details**: CPU name, core count, total/available RAM
@@ -236,12 +248,22 @@ pymodins.install_CyberSecurity_modules()
 
 ---
 
-## 🎯 Expected Output
+## 🎯 Screenshots
+
+### Main Installation Interface
 
 <div align="center">
-  <img src="source/pymodins_ui.png" alt="PYMODINS UI Screenshot" width="800"/>
+  <img src="https://raw.githubusercontent.com/Nandhan-KA/pymodins/main/source/pymodins_ui.png" alt="PYMODINS UI Screenshot" width="800"/>
   
-  *Screenshot of the PYMODINS Graphical User Interface*
+  *Main installation interface with package categories and module selection*
+</div>
+
+### Installed Packages Management
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Nandhan-KA/pymodins/main/source/installed_package.png" alt="PYMODINS Installed Packages" width="800"/>
+  
+  *Installed Packages tab showing all installed Python packages with versions, search functionality, and update options*
 </div>
 
 ---
