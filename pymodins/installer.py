@@ -288,18 +288,20 @@ def install_rust():
     return True
 
 basic_modules = [
-    'numpy', 'pandas', 'matplotlib', 'scipy', 'requests', 'beautifulsoup4', 'seaborn', 'tqdm', 'docutils', 'pyyaml', 'python-dotenv', 'pillow',
-    'ipython', 'rich', 'click', 'urllib3', 'certifi', 'chardet', 'idna'
+    'numpy', 'pandas', 'matplotlib', 'scipy', 'requests', 'beautifulsoup4', 'seaborn', 'tqdm', 
+    'docutils', 'pyyaml', 'python-dotenv', 'pillow', 'ipython', 'rich', 'click', 'urllib3', 
+    'certifi', 'chardet', 'idna', 'httpx', 'polars', 'pyarrow'
 ]
 
 advanced_modules = [
-    'pytz', 'typing_extensions', 'jsonschema', 'pydantic', 'attrs', 'pydantic-core', 'orjson', 'ujson'
+    'pytz', 'typing_extensions', 'jsonschema', 'pydantic', 'attrs', 'pydantic-core', 'orjson', 
+    'ujson', 'msgpack', 'rapidfuzz', 'python-dateutil', 'more-itertools', 'toolz'
 ]
 
 science_modules = [
     'numpy', 'scipy', 'matplotlib', 'pandas', 'scikit-image', 'statsmodels', 'sympy', 'networkx', 'biopython',
-    'h5py', 'numba', 'Cython', 'pandas-profiling', 'pytest', 'openpyxl', 'xlrd', 'scrapy', 'tabula-py', 'geopandas', 'pyproj',
-    'numexpr', 'pint', 'patsy', 'arviz'
+    'h5py', 'numba', 'Cython', 'ydata-profiling', 'pytest', 'openpyxl', 'xlrd', 'scrapy', 'tabula-py', 'geopandas', 'pyproj',
+    'numexpr', 'pint', 'patsy', 'arviz', 'polars', 'pyarrow', 'duckdb', 'xarray'
 ]
 
 computer_vision_modules = [
@@ -309,21 +311,21 @@ computer_vision_modules = [
 ]
 
 machine_learning_modules = [
-    'scikit-learn', 'tensorflow', 'keras', 'xgboost', 'lightgbm', 'catboost', 'shap',
-    'pandas', 'dask', 'mlxtend', 'imbalanced-learn', 'optuna', 'hyperopt', 'mlflow', 'pymc3', 'h2o', 'ray',
-    'featuretools', 'category-encoders', 'scikit-optimize', 'prophet'
+    'scikit-learn', 'xgboost', 'lightgbm', 'catboost', 'shap', 'pandas', 'dask', 'mlxtend', 
+    'imbalanced-learn', 'optuna', 'hyperopt', 'mlflow', 'pymc', 'h2o', 'ray', 'featuretools', 
+    'category-encoders', 'scikit-optimize', 'prophet', 'statsforecast', 'autogluon', 'pycaret'
 ]
 
 deep_learning_tensorflow_modules = [
-    'tensorflow', 'keras', 'tensorboard', 'keras-rl', 'keras-tuner',
+    'tensorflow', 'keras', 'tensorboard', 'keras-rl', 'keras-tuner', 'keras-cv', 'keras-nlp',
     'tensorflow-addons', 'tensorflow-datasets', 'tensorflow-hub', 'tensorflow-probability',
-    'tensorboard', 'tensorboardX', 'onnx', 'onnxruntime', 'tf2onnx'
+    'tensorboardX', 'onnx', 'onnxruntime', 'tf2onnx', 'tensorflow-model-optimization'
 ]
 
 deep_learning_pytorch_modules = [
-    'torch', 'torchvision', 'torchaudio', 'pytorch-lightning', 'torchmetrics',
-    'transformers', 'fastai', 'accelerate', 'timm', 'einops',
-    'onnx', 'onnxruntime', 'tensorboard', 'tensorboardX'
+    'torch', 'torchvision', 'torchaudio', 'pytorch-lightning', 'torchmetrics', 'lightning',
+    'transformers', 'fastai', 'accelerate', 'timm', 'einops', 'datasets', 'tokenizers',
+    'onnx', 'onnxruntime', 'tensorboard', 'tensorboardX', 'torchinfo', 'pytorch-forecasting'
 ]
 
 full_stack_development_modules = [
@@ -371,21 +373,22 @@ cloud_computing_modules = [
 ]
 
 devops_modules = [
-    'ansible', 'jenkins', 'travis-ci', 'git', 'docker', 'docker-compose', 'kubernetes', 'vagrant', 'puppet', 'chef', 
-    'salt', 'fabric', 'terraform', 'consul', 'nomad', 'packer', 'helm', 'spinnaker', 'circleci', 'bamboo', 'gitlab', 
-    'gitea', 'hugo', 'mkdocs', 'pre-commit', 'pyinfra', 'invoke'
+    'ansible', 'fabric', 'invoke', 'pre-commit', 'pyinfra', 'gitpython', 'python-gitlab', 
+    'pyyaml', 'jinja2', 'click', 'typer', 'kubernetes', 'docker', 'docker-compose', 'pulumi', 
+    'boto3', 'azure-cli', 'google-cloud', 'terraform-py', 'ruff', 'black', 'mypy', 'pylint'
 ]
 
 big_data_modules = [
-    'pyspark', 'hadoop', 'kafka', 'dask', 'ray', 'modin', 'polars', 'koalas', 'pyarrow', 'fastparquet', 
-    'pydoop', 'pyhive', 'mrjob', 'h5py', 'tables', 'zarr',  'petastorm', 'cudf', 'datashader', 'blaze', 
-    'turicreate', 'pandas', 'pandas-profiling', 'vaex', 'deltalake', 'pyorc', 'dask-ml'
+    'pyspark', 'dask', 'ray', 'modin', 'polars', 'pyarrow', 'fastparquet', 'duckdb',
+    'h5py', 'tables', 'zarr', 'pandas', 'ydata-profiling', 'vaex', 'deltalake', 'ibis-framework'
 ]
 
 
 # Additional Categories
 nlp_modules = [
-    'spacy', 'nltk', 'gensim', 'stanza', 'textblob', 'sentence-transformers', 'fasttext', 'flair', 'tokenizers', 'sumy'
+    'spacy', 'nltk', 'gensim', 'transformers', 'textblob', 'sentence-transformers', 
+    'fasttext', 'flair', 'tokenizers', 'sumy', 'langchain', 'openai', 'anthropic', 
+    'llama-index', 'haystack-ai', 'semantic-kernel'
 ]
 
 audio_modules = [
@@ -393,7 +396,9 @@ audio_modules = [
 ]
 
 web_framework_modules = [
-    'fastapi', 'flask', 'django', 'starlette', 'uvicorn', 'gunicorn', 'httpx', 'requests', 'sqlmodel', 'fastapi-users', 'pydantic-settings'
+    'fastapi', 'flask', 'django', 'starlette', 'uvicorn', 'gunicorn', 'httpx', 
+    'requests', 'sqlmodel', 'fastapi-users', 'pydantic-settings', 'litestar', 'robyn',
+    'sanic', 'quart', 'falcon', 'bottle'
 ]
 
 geospatial_modules = [

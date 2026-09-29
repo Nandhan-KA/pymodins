@@ -407,29 +407,46 @@ class InstallerUI(tk.Tk):
         main_pane.add(left_frame, weight=1)
 
         right_frame = ttk.Frame(main_pane)
-        ttk.Label(right_frame, text="Modules").pack(anchor="w")
+        ttk.Label(right_frame, text="Modules (Select multiple)", font=('Segoe UI', 10, 'bold')).pack(anchor="w")
+        
+        # Create canvas with scrollbar for checkboxes
         mod_wrap = ttk.Frame(right_frame)
         mod_wrap.pack(fill=tk.BOTH, expand=True)
-        mod_scroll = ttk.Scrollbar(mod_wrap, orient=tk.VERTICAL)
-        self.module_list = tk.Listbox(
-            mod_wrap,
-            selectmode=tk.EXTENDED,
-            height=20,
+        
+        mod_canvas = tk.Canvas(
+            mod_wrap, 
             bg=self.color_panel,
-            fg=self.color_text,
-            selectbackground=self.color_accent,
             highlightthickness=0,
-            activestyle='none',
-            relief=tk.FLAT,
-            font=('Segoe UI', 10)
+            height=300
         )
-        self.module_list.configure(yscrollcommand=mod_scroll.set)
-        mod_scroll.configure(command=self.module_list.yview)
-        self.module_list.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        mod_scroll = ttk.Scrollbar(mod_wrap, orient=tk.VERTICAL, command=mod_canvas.yview)
+        self.module_checkboxes_frame = ttk.Frame(mod_canvas)
+        
+        # Configure canvas scrolling
+        self.module_checkboxes_frame.bind(
+            "<Configure>",
+            lambda e: mod_canvas.configure(scrollregion=mod_canvas.bbox("all"))
+        )
+        
+        mod_canvas.create_window((0, 0), window=self.module_checkboxes_frame, anchor="nw")
+        mod_canvas.configure(yscrollcommand=mod_scroll.set)
+        
+        mod_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         mod_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        
+        # Store checkbox variables
+        self.module_check_vars = {}
+        self.module_checkboxes = {}
+        
+        # Add select all/none buttons
+        select_btns = ttk.Frame(right_frame)
+        select_btns.pack(fill=tk.X, pady=(6, 0))
+        ttk.Button(select_btns, text="Select All", command=self.select_all_modules, width=12).pack(side=tk.LEFT)
+        ttk.Button(select_btns, text="Clear All", command=self.clear_all_modules, width=12).pack(side=tk.LEFT, padx=(6, 0))
+        
         btns = ttk.Frame(right_frame)
         btns.pack(fill=tk.X, pady=(8, 0))
-        self.btn_install_sel = ttk.Button(btns, text="Install Selected", command=self.on_install_selected)
+        self.btn_install_sel = ttk.Button(btns, text="Install Selected", command=self.on_install_selected, style='Accent.TButton')
         self.btn_install_sel.pack(side=tk.LEFT)
         self.btn_install_all = ttk.Button(btns, text="Install All", command=self.on_install_all)
         self.btn_install_all.pack(side=tk.LEFT, padx=(10, 0))
@@ -860,12 +877,12 @@ class InstallerUI(tk.Tk):
             messagebox.showinfo("Select Category", "Please select a category and modules to check for conflicts.")
             return
         
-        indices = self.module_list.curselection()
-        if not indices:
+        # Get selected modules from checkboxes
+        modules = [module for module, var in self.module_check_vars.items() if var.get()]
+        
+        if not modules:
             messagebox.showinfo("Select Modules", "Please select one or more modules to check.")
             return
-        
-        modules = [self.module_list.get(i) for i in indices]
         
         self.status_var.set(f"Checking conflicts for {len(modules)} module(s)...")
         
@@ -1010,20 +1027,46 @@ class InstallerUI(tk.Tk):
             style.theme_use('vista')
         except Exception:
             pass
+        
+        # Frame and container styles
         style.configure('TFrame', background=self.color_bg)
         style.configure('TLabelframe', background=self.color_bg, foreground=self.color_text)
-        style.configure('TLabelframe.Label', background=self.color_bg, foreground=self.color_text)
+        style.configure('TLabelframe.Label', background=self.color_bg, foreground=self.color_text, font=('Segoe UI', 10, 'bold'))
+        
+        # Notebook styles
         style.configure('TNotebook', background=self.color_bg, borderwidth=0)
-        style.configure('TNotebook.Tab', background=self.color_panel, foreground=self.color_text, padding=(12, 6))
-        style.map('TNotebook.Tab', background=[('selected', self.color_bg)], foreground=[('selected', self.color_text)])
+        style.configure('TNotebook.Tab', background=self.color_panel, foreground=self.color_text, padding=(14, 8), font=('Segoe UI', 9))
+        style.map('TNotebook.Tab', 
+                 background=[('selected', self.color_bg), ('!selected', self.color_panel)], 
+                 foreground=[('selected', self.color_accent), ('!selected', self.color_text)])
+        
         style.configure('TPanedwindow', background=self.color_bg)
 
+        # Label styles
         style.configure('Title.TLabel', font=('Segoe UI', 20, 'bold'), foreground=self.color_text, background=self.color_bg)
         style.configure('Subtitle.TLabel', font=('Segoe UI', 10), foreground=self.color_muted, background=self.color_bg)
         style.configure('Status.TLabel', font=('Segoe UI', 9), foreground=self.color_muted, background=self.color_bg)
-        style.configure('TLabel', foreground=self.color_text, background=self.color_bg)
-        style.configure('TButton', padding=6)
-        style.map('TButton', foreground=[('disabled', self.color_muted)])
+        style.configure('TLabel', foreground=self.color_text, background=self.color_bg, font=('Segoe UI', 9))
+        
+        # Button styles
+        style.configure('TButton', padding=(10, 6), font=('Segoe UI', 9))
+        style.configure('Accent.TButton', padding=(12, 6), font=('Segoe UI', 9, 'bold'))
+        style.map('TButton', 
+                 foreground=[('disabled', self.color_muted), ('!disabled', self.color_text)],
+                 background=[('active', self.color_accent)])
+        style.map('Accent.TButton', 
+                 foreground=[('!disabled', 'white')],
+                 background=[('!disabled', self.color_accent), ('active', '#0056b3')])
+        
+        # Checkbutton styles
+        style.configure('Module.TCheckbutton', 
+                       background=self.color_bg, 
+                       foreground=self.color_text,
+                       font=('Segoe UI', 10),
+                       padding=4)
+        style.map('Module.TCheckbutton',
+                 background=[('active', self.color_panel), ('!active', self.color_bg)],
+                 foreground=[('selected', self.color_accent)])
 
     def on_pyver_change(self, _event=None):
         sel = self.pyver_var.get().strip()
@@ -1096,9 +1139,44 @@ class InstallerUI(tk.Tk):
             return
         category = self.categories[sel[0]]
         modules = get_modules_for_category(category)
-        self.module_list.delete(0, tk.END)
-        for m in modules:
-            self.module_list.insert(tk.END, m)
+        
+        # Clear existing checkboxes
+        for widget in self.module_checkboxes_frame.winfo_children():
+            widget.destroy()
+        
+        self.module_check_vars.clear()
+        self.module_checkboxes.clear()
+        
+        # Create checkboxes for each module
+        for idx, module in enumerate(modules):
+            var = tk.BooleanVar(value=False)
+            self.module_check_vars[module] = var
+            
+            cb = ttk.Checkbutton(
+                self.module_checkboxes_frame,
+                text=module,
+                variable=var,
+                style='Module.TCheckbutton'
+            )
+            cb.grid(row=idx, column=0, sticky='w', padx=10, pady=2)
+            self.module_checkboxes[module] = cb
+        
+        # Update selected count label if it exists
+        selected_count = sum(1 for v in self.module_check_vars.values() if v.get())
+        self.status_var.set(f"Category: {category} - {len(modules)} modules available")
+    
+    def select_all_modules(self):
+        """Select all checkboxes"""
+        for var in self.module_check_vars.values():
+            var.set(True)
+        selected_count = len(self.module_check_vars)
+        self.status_var.set(f"Selected {selected_count} modules")
+    
+    def clear_all_modules(self):
+        """Clear all checkboxes"""
+        for var in self.module_check_vars.values():
+            var.set(False)
+        self.status_var.set("Cleared all selections")
 
     def ensure_ready(self):
         if platform.system().lower() != "windows":
@@ -1421,11 +1499,14 @@ class InstallerUI(tk.Tk):
             messagebox.showinfo("Select Category", "Please select a category.")
             return
         category = self.categories[cat_sel[0]]
-        indices = self.module_list.curselection()
-        if not indices:
+        
+        # Get selected modules from checkboxes
+        modules = [module for module, var in self.module_check_vars.items() if var.get()]
+        
+        if not modules:
             messagebox.showinfo("Select Modules", "Please select one or more modules to install.")
             return
-        modules = [self.module_list.get(i) for i in indices]
+        
         self._install_modules(category, modules)
 
     def on_install_all(self):
