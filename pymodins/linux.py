@@ -158,9 +158,16 @@ machine_learning_modules_linux = [
     'pandas', 'dask', 'mlxtend', 'imbalanced-learn', 'optuna', 'hyperopt', 'mlflow', 'pymc3', 'h2o', 'ray'
 ]
 
-deep_learning_modules_linux = [
-    'torch', 'pytorch-lightning', 'transformers', 'fastai', 'keras-rl', 'tensorboard', 
-    'onnx', 'onnxruntime', 'mxnet', 'chainer', 'paddlepaddle', 'theano', 'lasagne', 'gluonts'
+deep_learning_tensorflow_modules_linux = [
+    'tensorflow', 'keras', 'tensorboard', 'keras-rl', 'keras-tuner',
+    'tensorflow-addons', 'tensorflow-datasets', 'tensorflow-hub', 'tensorflow-probability',
+    'tensorboard', 'tensorboardX', 'onnx', 'onnxruntime', 'tf2onnx'
+]
+
+deep_learning_pytorch_modules_linux = [
+    'torch', 'torchvision', 'torchaudio', 'pytorch-lightning', 'torchmetrics',
+    'transformers', 'fastai', 'accelerate', 'timm', 'einops',
+    'onnx', 'onnxruntime', 'tensorboard', 'tensorboardX'
 ]
 
 full_stack_development_modules_linux = [
@@ -316,7 +323,8 @@ module_types_linux = [
     'Science Modules Linux',
     'Computer Vision Modules Linux',
     'Machine Learning Modules Linux',
-    'Deep Learning Modules Linux',
+    'Deep Learning TensorFlow Modules Linux',
+    'Deep Learning PyTorch Modules Linux',
     'Full Stack Development Modules Linux',
     'Network Modules Linux',
     'Build Modules Linux',
@@ -457,7 +465,8 @@ def run():
                 'Science Modules Linux',
                 'Computer Vision Modules Linux',
                 'Machine Learning Modules Linux',
-                'Deep Learning Modules Linux',
+                'Deep Learning TensorFlow Modules Linux',
+                'Deep Learning PyTorch Modules Linux',
                 'Full Stack Development Modules Linux',
                 'Network Modules Linux',
                 'Build Modules Linux',

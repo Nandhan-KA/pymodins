@@ -314,10 +314,16 @@ machine_learning_modules = [
     'featuretools', 'category-encoders', 'scikit-optimize', 'prophet'
 ]
 
-deep_learning_modules = [
-    'torch', 'pytorch-lightning', 'transformers', 'fastai', 'keras-rl', 'tensorboard',
-    'onnx', 'onnxruntime', 'mxnet', 'chainer', 'deeplearning4j', 'paddlepaddle', 'theano', 'lasagne', 'gluonts',
-    'accelerate', 'keras-tuner', 'tensorboardX'
+deep_learning_tensorflow_modules = [
+    'tensorflow', 'keras', 'tensorboard', 'keras-rl', 'keras-tuner',
+    'tensorflow-addons', 'tensorflow-datasets', 'tensorflow-hub', 'tensorflow-probability',
+    'tensorboard', 'tensorboardX', 'onnx', 'onnxruntime', 'tf2onnx'
+]
+
+deep_learning_pytorch_modules = [
+    'torch', 'torchvision', 'torchaudio', 'pytorch-lightning', 'torchmetrics',
+    'transformers', 'fastai', 'accelerate', 'timm', 'einops',
+    'onnx', 'onnxruntime', 'tensorboard', 'tensorboardX'
 ]
 
 full_stack_development_modules = [
@@ -406,7 +412,8 @@ module_types = [
     'Science Modules',
     'Computer Vision Modules',
     'Machine Learning Modules',
-    'Deep Learning Modules',
+    'Deep Learning TensorFlow Modules',
+    'Deep Learning PyTorch Modules',
     'Full Stack Development Modules',
     'Network Modules',
     'Build Modules',
@@ -436,7 +443,8 @@ def installer():
     'Science Modules',
     'Computer Vision Modules',
     'Machine Learning Modules',
-    'Deep Learning Modules',
+    'Deep Learning TensorFlow Modules',
+    'Deep Learning PyTorch Modules',
     'Full Stack Development Modules',
     'Network Modules',
     'Build Modules',

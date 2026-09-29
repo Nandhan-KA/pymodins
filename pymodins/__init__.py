@@ -5,7 +5,7 @@ This package provides an easy way to install essential Python modules for variou
 such as machine learning, deep learning, full-stack development, and more.
 
 Features:
-- Cross-platform support for Windows and Linux.
+- Cross-platform support for Windows, Linux, and macOS.
 - Installation functions for various categories of Python modules.
 """
 
@@ -28,7 +28,9 @@ if OS == "Windows":
         install_science_modules,
     )
 elif OS == "Linux":
-    from .linux import  run
+    from .linux import run
+elif OS == "Darwin":
+    from .macos import run
 else:
     raise OSError(f"Unsupported operating system: {OS}")
 

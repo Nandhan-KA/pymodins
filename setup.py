@@ -37,7 +37,9 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: POSIX :: Linux",
+        "Operating System :: MacOS :: MacOS X",
         "Environment :: Win32 (MS Windows)",
+        "Environment :: Console",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
@@ -48,5 +50,5 @@ setup(
         "Programming Language :: Python :: 3.12",
     ],
     python_requires='>=3.6',
-    platforms=["win32", "linux"],  
+    platforms=["win32", "linux", "darwin"],  
 )
