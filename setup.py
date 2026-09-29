@@ -7,10 +7,11 @@ with open('README.md', encoding='utf-8') as f:
 
 setup(
     name="pymodins",
-    version="3.2",
+    version="3.3",
     packages=find_packages(),
     install_requires=[
-        "rich"
+        "rich",
+        "packaging",  # For version parsing in security checker
     ],
     entry_points={
         "console_scripts": [

@@ -5,6 +5,7 @@ import subprocess
 import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter import filedialog
+from tkinter import scrolledtext
 
 import os
 import importlib.util
@@ -16,6 +17,16 @@ import re
 import shutil
 import ctypes
 import time
+
+# Import new security and requirements modules
+try:
+    from .security_checker import SecurityChecker, DependencyResolver
+    from .requirements_manager import RequirementsManager
+except ImportError:
+    # Fallback if imports fail
+    SecurityChecker = None
+    DependencyResolver = None
+    RequirementsManager = None
 
 PY_VERSION_COMPAT = {
     '3.6': {
@@ -266,14 +277,40 @@ def discover_python_scripts_folders():
 class InstallerUI(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("PYMODINS - Windows UI")
-        self.geometry("980x640")
-        self.minsize(880, 560)
+        self.title("PYMODINS - Python Module Installer & Manager")
+        
+        # Make UI responsive for all screen sizes
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        
+        # Calculate window size as percentage of screen (80% width, 85% height)
+        window_width = int(screen_width * 0.80)
+        window_height = int(screen_height * 0.85)
+        
+        # Ensure minimum size
+        window_width = max(window_width, 1024)
+        window_height = max(window_height, 680)
+        
+        # Center window on screen
+        x = (screen_width - window_width) // 2
+        y = (screen_height - window_height) // 2
+        
+        self.geometry(f"{window_width}x{window_height}+{x}+{y}")
+        self.minsize(1024, 680)
+        
+        # Allow window to be maximized
+        self.state('zoomed') if platform.system() == 'Windows' else None
 
         self._install_in_progress = False
         self._selected_python_version = 'auto'
         self._selected_python_folder = None
         self._cached_packages = []
+        
+        # Initialize security and requirements managers
+        self.security_checker = SecurityChecker() if SecurityChecker else None
+        self.requirements_manager = RequirementsManager() if RequirementsManager else None
+        self.dependency_resolver = DependencyResolver() if DependencyResolver else None
+        
         self.color_bg = "#ffffff"
         self.color_panel = "#f8f9fa"  # light gray
         self.color_text = "#212529"   # dark gray
@@ -396,6 +433,14 @@ class InstallerUI(tk.Tk):
         self.btn_install_sel.pack(side=tk.LEFT)
         self.btn_install_all = ttk.Button(btns, text="Install All", command=self.on_install_all)
         self.btn_install_all.pack(side=tk.LEFT, padx=(10, 0))
+        
+        # Add security and conflict check buttons
+        btns_row2 = ttk.Frame(right_frame)
+        btns_row2.pack(fill=tk.X, pady=(6, 0))
+        self.btn_check_conflicts = ttk.Button(btns_row2, text="Check Conflicts", command=self.on_check_conflicts)
+        self.btn_check_conflicts.pack(side=tk.LEFT)
+        ttk.Label(btns_row2, text="(Check selected for dependency issues)", 
+                 font=('Segoe UI', 8), foreground=self.color_muted).pack(side=tk.LEFT, padx=(6, 0))
         main_pane.add(right_frame, weight=2)
 
         log_container = ttk.Frame(install_page, padding=(10, 0))
@@ -540,19 +585,418 @@ class InstallerUI(tk.Tk):
         self.render_system_info()
         self.render_installed_packages()
 
+    def on_export_requirements(self):
+        """Export all installed packages to requirements.txt"""
+        if not self.requirements_manager:
+            messagebox.showerror("Not Available", "Requirements manager not available.")
+            return
+        
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".txt",
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")],
+            initialfile="requirements.txt",
+            title="Export Requirements"
+        )
+        
+        if not file_path:
+            return
+        
+        self.status_var.set("Exporting requirements...")
+        
+        def export_worker():
+            try:
+                # Update pip command if custom folder selected
+                if self._selected_python_folder:
+                    pip_path = os.path.join(self._selected_python_folder, 'pip.exe')
+                    if os.path.isfile(pip_path):
+                        self.requirements_manager.pip_command = [pip_path]
+                
+                success = self.requirements_manager.export_requirements(file_path, add_header=True)
+                
+                if success:
+                    self.after(0, lambda: messagebox.showinfo(
+                        "Export Successful",
+                        f"Requirements exported to:\n{file_path}\n\n"
+                        f"You can now use this file to recreate the environment with:\n"
+                        f"pip install -r requirements.txt"
+                    ))
+                    self.after(0, lambda: self.status_var.set(f"Exported to {os.path.basename(file_path)}"))
+                else:
+                    self.after(0, lambda: messagebox.showerror("Export Failed", "Failed to export requirements."))
+                    self.after(0, lambda: self.status_var.set("Ready"))
+            except Exception as e:
+                self.after(0, lambda: messagebox.showerror("Error", f"Error exporting requirements: {e}"))
+                self.after(0, lambda: self.status_var.set("Ready"))
+        
+        threading.Thread(target=export_worker, daemon=True).start()
+
+    def on_import_requirements(self):
+        """Import and install packages from requirements.txt"""
+        if not self.requirements_manager:
+            messagebox.showerror("Not Available", "Requirements manager not available.")
+            return
+        
+        file_path = filedialog.askopenfilename(
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")],
+            title="Import Requirements"
+        )
+        
+        if not file_path:
+            return
+        
+        if not messagebox.askyesno(
+            "Confirm Import",
+            f"Install all packages from:\n{file_path}\n\n"
+            "This may take a while and will modify your Python environment.\n\n"
+            "Continue?"
+        ):
+            return
+        
+        self.status_var.set("Installing from requirements...")
+        self.set_controls_state("disabled")
+        self._install_in_progress = True
+        
+        def import_worker():
+            try:
+                # Update pip command if custom folder selected
+                if self._selected_python_folder:
+                    pip_path = os.path.join(self._selected_python_folder, 'pip.exe')
+                    if os.path.isfile(pip_path):
+                        self.requirements_manager.pip_command = [pip_path]
+                
+                self.append_log(f"Installing from {os.path.basename(file_path)}...\n")
+                success, output = self.requirements_manager.install_from_requirements(file_path)
+                
+                self.append_log(output)
+                
+                if success:
+                    self.append_log("\n✓ Requirements installed successfully.\n")
+                    self.after(0, lambda: messagebox.showinfo(
+                        "Import Successful",
+                        "Packages from requirements.txt installed successfully!"
+                    ))
+                else:
+                    self.append_log("\n✗ Some packages failed to install.\n")
+                    self.after(0, lambda: messagebox.showwarning(
+                        "Import Completed with Errors",
+                        "Some packages failed to install. Check the output log for details."
+                    ))
+                
+                self.after(0, self.render_installed_packages)
+            except Exception as e:
+                self.append_log(f"\nError: {e}\n")
+                self.after(0, lambda: messagebox.showerror("Import Failed", f"Error importing requirements: {e}"))
+            finally:
+                self.after(0, lambda: self.status_var.set("Ready"))
+                self.after(0, lambda: self.set_controls_state("!disabled"))
+                self._install_in_progress = False
+        
+        threading.Thread(target=import_worker, daemon=True).start()
+
+    def on_export_category_requirements(self):
+        """Export selected category modules to requirements.txt"""
+        if not self.requirements_manager:
+            messagebox.showerror("Not Available", "Requirements manager not available.")
+            return
+        
+        cat_sel = self.category_list.curselection()
+        if not cat_sel:
+            messagebox.showinfo("Select Category", "Please select a category first.")
+            return
+        
+        category = self.categories[cat_sel[0]]
+        modules = list(get_modules_for_category(category))
+        
+        if not modules:
+            messagebox.showinfo("No Modules", "No modules found for this category.")
+            return
+        
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".txt",
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")],
+            initialfile=f"requirements_{category.lower().replace(' ', '_')}.txt",
+            title=f"Export {category} Requirements"
+        )
+        
+        if not file_path:
+            return
+        
+        self.status_var.set(f"Exporting {category} requirements...")
+        
+        def export_worker():
+            try:
+                success = self.requirements_manager.generate_requirements_from_category(
+                    category, modules, file_path
+                )
+                
+                if success:
+                    self.after(0, lambda: messagebox.showinfo(
+                        "Export Successful",
+                        f"Requirements for {category} exported to:\n{file_path}"
+                    ))
+                    self.after(0, lambda: self.status_var.set("Ready"))
+                else:
+                    self.after(0, lambda: messagebox.showerror("Export Failed", "Failed to export category requirements."))
+                    self.after(0, lambda: self.status_var.set("Ready"))
+            except Exception as e:
+                self.after(0, lambda: messagebox.showerror("Error", f"Error exporting: {e}"))
+                self.after(0, lambda: self.status_var.set("Ready"))
+        
+        threading.Thread(target=export_worker, daemon=True).start()
+
+    def on_check_security(self):
+        """Check installed packages for security vulnerabilities"""
+        if not self.security_checker:
+            messagebox.showerror("Not Available", "Security checker not available.\n\nInstall 'packaging' module to enable this feature.")
+            return
+        
+        self.status_var.set("Checking security vulnerabilities...")
+        
+        def check_worker():
+            try:
+                packages = self.requirements_manager.get_installed_packages_with_versions() if self.requirements_manager else []
+                
+                if not packages:
+                    self.after(0, lambda: messagebox.showinfo("No Packages", "No packages to check."))
+                    self.after(0, lambda: self.status_var.set("Ready"))
+                    return
+                
+                vulnerable_packages = []
+                
+                for pkg in packages:
+                    vulns = self.security_checker.check_package(pkg['name'], pkg['version'])
+                    if vulns:
+                        vulnerable_packages.append({
+                            'name': pkg['name'],
+                            'version': pkg['version'],
+                            'vulnerabilities': vulns
+                        })
+                
+                self.after(0, lambda: self._show_security_report(vulnerable_packages, len(packages)))
+                self.after(0, lambda: self.status_var.set("Ready"))
+                
+            except Exception as e:
+                self.after(0, lambda: messagebox.showerror("Error", f"Error checking security: {e}"))
+                self.after(0, lambda: self.status_var.set("Ready"))
+        
+        threading.Thread(target=check_worker, daemon=True).start()
+
+    def _show_security_report(self, vulnerable_packages, total_packages):
+        """Display security vulnerability report in a new window"""
+        report_window = tk.Toplevel(self)
+        report_window.title("Security Vulnerability Report")
+        report_window.geometry("800x600")
+        report_window.minsize(700, 500)
+        
+        # Make window modal
+        report_window.transient(self)
+        report_window.grab_set()
+        
+        # Header
+        header_frame = ttk.Frame(report_window, padding=(10, 10))
+        header_frame.pack(fill=tk.X)
+        
+        if vulnerable_packages:
+            title_text = f"⚠️ Found {len(vulnerable_packages)} package(s) with vulnerabilities"
+            title_color = self.color_alert
+        else:
+            title_text = f"✓ All {total_packages} packages are secure"
+            title_color = self.color_good
+        
+        title_label = ttk.Label(header_frame, text=title_text, font=('Segoe UI', 14, 'bold'))
+        title_label.pack(anchor="w")
+        
+        # Report content
+        content_frame = ttk.Frame(report_window, padding=(10, 0))
+        content_frame.pack(fill=tk.BOTH, expand=True)
+        
+        # Text widget with scrollbar
+        text_scroll = ttk.Scrollbar(content_frame)
+        report_text = tk.Text(
+            content_frame,
+            wrap=tk.WORD,
+            font=('Consolas', 10),
+            bg=self.color_panel,
+            fg=self.color_text,
+            yscrollcommand=text_scroll.set
+        )
+        text_scroll.configure(command=report_text.yview)
+        report_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        text_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        
+        # Build report
+        if vulnerable_packages:
+            for pkg_info in vulnerable_packages:
+                report_text.insert(tk.END, f"\n{'='*80}\n")
+                report_text.insert(tk.END, f"Package: {pkg_info['name']} v{pkg_info['version']}\n")
+                report_text.insert(tk.END, f"{'='*80}\n\n")
+                
+                for i, vuln in enumerate(pkg_info['vulnerabilities'], 1):
+                    report_text.insert(tk.END, f"Vulnerability #{i}:\n")
+                    report_text.insert(tk.END, f"  ID: {vuln.get('id', 'N/A')}\n")
+                    if vuln.get('cve'):
+                        report_text.insert(tk.END, f"  CVE: {vuln['cve']}\n")
+                    report_text.insert(tk.END, f"  Affected: {', '.join(vuln.get('specs', []))}\n")
+                    report_text.insert(tk.END, f"  Advisory: {vuln.get('advisory', 'No details')}\n\n")
+        else:
+            report_text.insert(tk.END, "\n✓ No known vulnerabilities found in installed packages.\n\n")
+            report_text.insert(tk.END, f"Scanned {total_packages} package(s) against the Safety DB.\n")
+        
+        report_text.configure(state='disabled')
+        
+        # Button frame
+        button_frame = ttk.Frame(report_window, padding=(10, 10))
+        button_frame.pack(fill=tk.X)
+        ttk.Button(button_frame, text="Close", command=report_window.destroy).pack(side=tk.RIGHT)
+
+    def on_check_conflicts(self):
+        """Check for dependency conflicts before installation"""
+        if not self.dependency_resolver:
+            messagebox.showerror("Not Available", "Dependency resolver not available.")
+            return
+        
+        cat_sel = self.category_list.curselection()
+        if not cat_sel:
+            messagebox.showinfo("Select Category", "Please select a category and modules to check for conflicts.")
+            return
+        
+        indices = self.module_list.curselection()
+        if not indices:
+            messagebox.showinfo("Select Modules", "Please select one or more modules to check.")
+            return
+        
+        modules = [self.module_list.get(i) for i in indices]
+        
+        self.status_var.set(f"Checking conflicts for {len(modules)} module(s)...")
+        
+        def check_worker():
+            try:
+                # Update pip command if custom folder selected
+                pip_cmd = None
+                if self._selected_python_folder:
+                    pip_path = os.path.join(self._selected_python_folder, 'pip.exe')
+                    if os.path.isfile(pip_path):
+                        pip_cmd = [pip_path]
+                
+                resolver = DependencyResolver(pip_cmd) if pip_cmd else self.dependency_resolver
+                conflicts_found = {}
+                
+                for module in modules:
+                    has_conflicts, conflicts = resolver.check_dependency_tree(module)
+                    if has_conflicts:
+                        conflicts_found[module] = conflicts
+                
+                self.after(0, lambda: self._show_conflicts_report(modules, conflicts_found))
+                self.after(0, lambda: self.status_var.set("Ready"))
+                
+            except Exception as e:
+                self.after(0, lambda: messagebox.showerror("Error", f"Error checking conflicts: {e}"))
+                self.after(0, lambda: self.status_var.set("Ready"))
+        
+        threading.Thread(target=check_worker, daemon=True).start()
+
+    def _show_conflicts_report(self, modules, conflicts_found):
+        """Display dependency conflicts report"""
+        report_window = tk.Toplevel(self)
+        report_window.title("Dependency Conflict Report")
+        report_window.geometry("750x500")
+        report_window.minsize(650, 400)
+        
+        report_window.transient(self)
+        report_window.grab_set()
+        
+        # Header
+        header_frame = ttk.Frame(report_window, padding=(10, 10))
+        header_frame.pack(fill=tk.X)
+        
+        if conflicts_found:
+            title_text = f"⚠️ Found conflicts in {len(conflicts_found)} package(s)"
+            title_color = self.color_warn
+        else:
+            title_text = f"✓ No conflicts detected for {len(modules)} module(s)"
+            title_color = self.color_good
+        
+        title_label = ttk.Label(header_frame, text=title_text, font=('Segoe UI', 14, 'bold'))
+        title_label.pack(anchor="w")
+        
+        # Content
+        content_frame = ttk.Frame(report_window, padding=(10, 0))
+        content_frame.pack(fill=tk.BOTH, expand=True)
+        
+        text_scroll = ttk.Scrollbar(content_frame)
+        report_text = tk.Text(
+            content_frame,
+            wrap=tk.WORD,
+            font=('Consolas', 10),
+            bg=self.color_panel,
+            fg=self.color_text,
+            yscrollcommand=text_scroll.set
+        )
+        text_scroll.configure(command=report_text.yview)
+        report_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        text_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        
+        if conflicts_found:
+            for module, conflicts in conflicts_found.items():
+                report_text.insert(tk.END, f"\n{'='*70}\n")
+                report_text.insert(tk.END, f"Package: {module}\n")
+                report_text.insert(tk.END, f"{'='*70}\n\n")
+                for conflict in conflicts:
+                    report_text.insert(tk.END, f"  • {conflict}\n")
+                report_text.insert(tk.END, "\n")
+        else:
+            report_text.insert(tk.END, "\n✓ No dependency conflicts detected.\n\n")
+            report_text.insert(tk.END, f"Checked modules: {', '.join(modules)}\n\n")
+            report_text.insert(tk.END, "All selected packages should install without conflicts.\n")
+        
+        report_text.configure(state='disabled')
+        
+        # Buttons
+        button_frame = ttk.Frame(report_window, padding=(10, 10))
+        button_frame.pack(fill=tk.X)
+        
+        if conflicts_found:
+            ttk.Label(button_frame, text="⚠️ Installation may fail or break existing packages", 
+                     foreground=self.color_warn).pack(side=tk.LEFT)
+        
+        ttk.Button(button_frame, text="Close", command=report_window.destroy).pack(side=tk.RIGHT)
+
+
 
     def create_menu(self):
         menubar = tk.Menu(self)
+        
+        # App menu
         app_menu = tk.Menu(menubar, tearoff=0)
         app_menu.add_command(label="Upgrade pip", command=self.on_upgrade_pip)
         app_menu.add_separator()
         app_menu.add_command(label="Exit", command=self.destroy)
         menubar.add_cascade(label="App", menu=app_menu)
+        
+        # Tools menu
+        tools_menu = tk.Menu(menubar, tearoff=0)
+        tools_menu.add_command(label="Export Requirements.txt", command=self.on_export_requirements)
+        tools_menu.add_command(label="Import Requirements.txt", command=self.on_import_requirements)
+        tools_menu.add_separator()
+        tools_menu.add_command(label="Check Security Vulnerabilities", command=self.on_check_security)
+        tools_menu.add_command(label="Check Dependency Conflicts", command=self.on_check_conflicts)
+        tools_menu.add_separator()
+        tools_menu.add_command(label="Export Category to Requirements", command=self.on_export_category_requirements)
+        menubar.add_cascade(label="Tools", menu=tools_menu)
 
+        # Help menu
         help_menu = tk.Menu(menubar, tearoff=0)
         help_menu.add_command(label="About", command=lambda: messagebox.showinfo(
             "About PYMODINS",
-            "PYMODINS UI\nCurated Python module installer for Windows by Nandhan K."
+            "PYMODINS v3.3\n\nCurated Python module installer for Windows\n\n"
+            "Features:\n"
+            "• Domain-specific package collections\n"
+            "• Security vulnerability checking\n"
+            "• Dependency conflict detection\n"
+            "• Requirements.txt export/import\n"
+            "• Responsive UI for all screen sizes\n\n"
+            "Created by Nandhan K\n"
+            "GitHub: @Nandhan-KA"
         ))
         help_menu.add_separator()
         help_menu.add_command(label="Documentation", command=lambda: webbrowser.open('https://pymodins.readthedocs.io/en/latest/'))
@@ -1095,6 +1539,8 @@ class InstallerUI(tk.Tk):
             self.btn_upgrade.state([state])
             self.btn_install_sel.state([state])
             self.btn_install_all.state([state])
+            if hasattr(self, 'btn_check_conflicts'):
+                self.btn_check_conflicts.state([state])
             if hasattr(self, 'btn_update_pkg'):
                 self.btn_update_pkg.state([state])
             if hasattr(self, 'btn_uninstall_pkg'):
