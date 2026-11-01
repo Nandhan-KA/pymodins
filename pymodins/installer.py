@@ -35,9 +35,9 @@ def run_as_admin():
         return True
 
 
-def internet(ping="https://google.com"):
+def internet(ping="https://google.com", timeout=3):
     try:
-        urllib.request.urlopen(ping)
+        urllib.request.urlopen(ping, timeout=timeout)
         return True
     except:
         return False

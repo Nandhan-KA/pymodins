@@ -307,7 +307,8 @@ class InstallerUI(tk.Tk):
         self._cached_packages = []
         
         # Initialize security and requirements managers
-        self.security_checker = SecurityChecker() if SecurityChecker else None
+        # Load the remote vulnerability database only when security checking is requested.
+        self.security_checker = None
         self.requirements_manager = RequirementsManager() if RequirementsManager else None
         self.dependency_resolver = DependencyResolver() if DependencyResolver else None
         
@@ -326,9 +327,6 @@ class InstallerUI(tk.Tk):
             self.after(100, self.destroy)
             return
 
-        if not installer_mod.internet():
-            messagebox.showwarning("No Internet", "An active internet connection is required.")
-
         if not installer_mod.is_admin():
             if messagebox.askyesno("Admin Required", "Administrative privileges are required for installations.\n\nElevate now?"):
                 if installer_mod.run_as_admin():
@@ -341,6 +339,17 @@ class InstallerUI(tk.Tk):
         self.create_menu()
         self.create_widgets()
         self.populate_categories()
+        self._check_internet_in_background()
+
+    def _check_internet_in_background(self):
+        def check_connection():
+            connected = installer_mod.internet()
+            if not connected:
+                self.after(0, lambda: messagebox.showwarning(
+                    "No Internet", "An active internet connection is required."
+                ))
+
+        threading.Thread(target=check_connection, daemon=True).start()
 
     def create_widgets(self):
         self.notebook = ttk.Notebook(self)
@@ -763,7 +772,7 @@ class InstallerUI(tk.Tk):
 
     def on_check_security(self):
         """Check installed packages for security vulnerabilities"""
-        if not self.security_checker:
+        if not SecurityChecker:
             messagebox.showerror("Not Available", "Security checker not available.\n\nInstall 'packaging' module to enable this feature.")
             return
         
@@ -771,6 +780,11 @@ class InstallerUI(tk.Tk):
         
         def check_worker():
             try:
+                security_checker = self.security_checker
+                if security_checker is None:
+                    security_checker = SecurityChecker()
+                    self.security_checker = security_checker
+
                 packages = self.requirements_manager.get_installed_packages_with_versions() if self.requirements_manager else []
                 
                 if not packages:
@@ -781,7 +795,7 @@ class InstallerUI(tk.Tk):
                 vulnerable_packages = []
                 
                 for pkg in packages:
-                    vulns = self.security_checker.check_package(pkg['name'], pkg['version'])
+                    vulns = security_checker.check_package(pkg['name'], pkg['version'])
                     if vulns:
                         vulnerable_packages.append({
                             'name': pkg['name'],
@@ -1910,10 +1924,11 @@ class InstallerUI(tk.Tk):
 
 def main():
     app = InstallerUI()
-    try:
-        app.mainloop()
-    except Exception:
-        pass
+    app.mainloop()
+
+
+if __name__ == "__main__":
+    main()
 
 
 def _init_log_tags(text_widget: tk.Text):
